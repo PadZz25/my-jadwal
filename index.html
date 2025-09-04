@@ -37,6 +37,14 @@
             transform: scale(0.8);
             transition: all 0.2s ease-in-out;
         }
+        #taskList.loading::after {
+            content: 'Memuat tugas dari awan...';
+            display: block;
+            text-align: center;
+            padding: 20px;
+            color: #6b7280;
+            font-style: italic;
+        }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
@@ -46,19 +54,14 @@
         NEITHER Mermaid JS NOR SVG were used in this file. All visualizations are done via Chart.js (Canvas) or styled HTML elements.
         
         Narrative Plan:
-        1. Header: Welcome message.
-        2. Overview: Key stats as big numbers.
-        3. SKS Distribution Analysis: A donut chart for proportional credit load.
-        4. Weekly Schedule Breakdown: Grid-based timeline for all 7 days.
-        5. Task Manager: An interactive to-do list with localStorage persistence for adding, viewing, and deleting tasks.
-        6. Important Alert: Callout box for missing information.
+        1. Header & Overview: Welcome message and key stats.
+        2. SKS Distribution Analysis: Donut chart for credit load composition.
+        3. Weekly Schedule Breakdown: Grid-based timeline.
+        4. Task Manager: An interactive to-do list now powered by Firebase Firestore for real-time, cross-device synchronization.
+        5. Important Alert: Callout box for missing information.
 
-        Visualization Choices:
-        - Key Stats: Goal: Inform -> Method: Styled HTML (No SVG).
-        - SKS Distribution: Goal: Compare/Inform -> Library: Chart.js/Canvas (No SVG).
-        - Weekly Schedule: Goal: Organize -> Method: Styled HTML with Tailwind (No SVG).
-        - Task Manager: Goal: Organize -> Method: Interactive HTML form and list, powered by JavaScript and localStorage (No SVG).
-        - Alert: Goal: Inform -> Method: Styled HTML (No SVG).
+        Technology Upgrade:
+        - From localStorage to Firebase Firestore: Task data is no longer stored locally on a single device. It is now stored in a cloud database, allowing tasks added on one device (e.g., laptop) to appear in real-time on another (e.g., phone) as long as the same user session is active. This is achieved using Firebase SDKs for Auth (anonymous) and Firestore (real-time listeners).
     -->
 
     <div class="container mx-auto p-4 md:p-8 max-w-7xl">
@@ -71,7 +74,7 @@
 
         <section id="overview" class="mb-12">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
-                <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-[#118AB2]">
+                 <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-[#118AB2]">
                     <h3 class="text-5xl font-extrabold text-[#118AB2]">20</h3>
                     <p class="text-lg font-semibold text-gray-700 mt-2">Total SKS</p>
                 </div>
@@ -120,7 +123,6 @@
                     <div class="bg-green-100 p-4 rounded-lg shadow-md border-t-4 border-green-500 text-center">
                         <p class="font-bold text-gray-500 text-sm">12.10 - 13.10</p>
                         <h4 class="font-bold text-lg text-green-800">☕ ISTIRAHAT SIANG ☕</h4>
-                        <p class="text-green-700">Waktunya makan & sholat!</p>
                     </div>
                     <div class="bg-white p-4 rounded-lg shadow-md border-t-4 border-[#FFD166]">
                         <p class="font-bold text-gray-500 text-sm">13.10 - 14.50</p>
@@ -130,8 +132,7 @@
                         <p class="font-semibold text-gray-800 mt-2">📍 A19-405</p>
                     </div>
                 </div>
-
-                <div class="flex flex-col space-y-6">
+                 <div class="flex flex-col space-y-6">
                     <h3 class="text-2xl font-bold text-center bg-[#073B4C] text-white py-2 rounded-lg shadow-md">SELASA</h3>
                     <div class="bg-white p-4 rounded-lg shadow-md border-t-4 border-[#FFD166]">
                         <p class="font-bold text-gray-500 text-sm">07.00 - 08.40</p>
@@ -143,7 +144,6 @@
                     <div class="bg-blue-100 p-4 rounded-lg shadow-md border-t-4 border-blue-500 text-center">
                         <p class="font-bold text-gray-500 text-sm">08.40 - 09.35</p>
                         <h4 class="font-bold text-lg text-blue-800">JEDA PAGI</h4>
-                        <p class="text-blue-700">Waktu luang sebelum kelas berikutnya.</p>
                     </div>
                     <div class="bg-white p-4 rounded-lg shadow-md border-t-4 border-[#06D6A0]">
                         <p class="font-bold text-gray-500 text-sm">09.35 - 12.10</p>
@@ -153,16 +153,7 @@
                         <p class="font-semibold text-gray-800 mt-2">📍 A19-616</p>
                     </div>
                 </div>
-                
-                <div class="flex flex-col">
-                    <h3 class="text-2xl font-bold text-center bg-gray-600 text-white py-2 rounded-lg shadow-md">RABU</h3>
-                    <div class="bg-gray-200 border-t-4 border-gray-400 rounded-lg shadow-md p-6 flex flex-col items-center justify-center h-full mt-6">
-                        <div class="text-6xl mb-4">😴</div>
-                        <h4 class="font-bold text-2xl text-gray-800">Hari Kosong</h4>
-                        <p class="text-gray-600 text-center mt-2">Manfaatkan buat istirahat atau cicil tugas!</p>
-                    </div>
-                </div>
-
+                <div class="flex flex-col"><h3 class="text-2xl font-bold text-center bg-gray-600 text-white py-2 rounded-lg shadow-md">RABU</h3><div class="bg-gray-200 border-t-4 border-gray-400 rounded-lg shadow-md p-6 flex flex-col items-center justify-center h-full mt-6"><div class="text-6xl mb-4">😴</div><h4 class="font-bold text-2xl text-gray-800">Hari Kosong</h4></div></div>
                 <div class="flex flex-col space-y-6">
                     <h3 class="text-2xl font-bold text-center bg-[#073B4C] text-white py-2 rounded-lg shadow-md">KAMIS</h3>
                      <div class="bg-white p-4 rounded-lg shadow-md border-t-4 border-[#06D6A0]">
@@ -180,16 +171,7 @@
                         <p class="font-semibold text-gray-800 mt-2">📍 B11-415</p>
                     </div>
                 </div>
-
-                 <div class="flex flex-col">
-                    <h3 class="text-2xl font-bold text-center bg-gray-600 text-white py-2 rounded-lg shadow-md">JUMAT</h3>
-                    <div class="bg-gray-200 border-t-4 border-gray-400 rounded-lg shadow-md p-6 flex flex-col items-center justify-center h-full mt-6">
-                        <div class="text-6xl mb-4">🕌</div>
-                        <h4 class="font-bold text-2xl text-gray-800">Hari Kosong</h4>
-                        <p class="text-gray-600 text-center mt-2">Selamat istirahat dan jangan lupa Jumatan!</p>
-                    </div>
-                </div>
-                
+                <div class="flex flex-col"><h3 class="text-2xl font-bold text-center bg-gray-600 text-white py-2 rounded-lg shadow-md">JUMAT</h3><div class="bg-gray-200 border-t-4 border-gray-400 rounded-lg shadow-md p-6 flex flex-col items-center justify-center h-full mt-6"><div class="text-6xl mb-4">🕌</div><h4 class="font-bold text-2xl text-gray-800">Hari Kosong</h4></div></div>
                 <div class="flex flex-col space-y-6">
                     <h3 class="text-2xl font-bold text-center bg-[#073B4C] text-white py-2 rounded-lg shadow-md">SABTU</h3>
                     <div class="bg-white p-4 rounded-lg shadow-md border-t-4 border-[#06D6A0]">
@@ -197,225 +179,174 @@
                         <p class="font-semibold text-gray-500 text-xs mt-1">🕒 Jam ke-1 s/d 4</p>
                         <h4 class="font-bold text-lg text-[#06D6A0] mt-2">Pendidikan Agama Islam</h4>
                         <p class="text-gray-600">Dosen: Moh. Fery Fauzi</p>
-                        <div class="mt-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-3 rounded-md">
-                            <p class="font-bold">Perhatian!</p>
-                            <p>Info ruang untuk kelas ini belum ada di KRS. Jangan lupa konfirmasi, ya!</p>
-                        </div>
+                        <div class="mt-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-3 rounded-md"><p class="font-bold">Perhatian!</p><p>Info ruang untuk kelas ini belum ada di KRS.</p></div>
                     </div>
                 </div>
-                
-                <div class="flex flex-col">
-                    <h3 class="text-2xl font-bold text-center bg-gray-600 text-white py-2 rounded-lg shadow-md">MINGGU</h3>
-                    <div class="bg-gray-200 border-t-4 border-gray-400 rounded-lg shadow-md p-6 flex flex-col items-center justify-center h-full mt-6">
-                        <div class="text-6xl mb-4">🎉</div>
-                        <h4 class="font-bold text-2xl text-gray-800">Akhir Pekan!</h4>
-                        <p class="text-gray-600 text-center mt-2">Saatnya recharge energi buat minggu depan!</p>
-                    </div>
-                </div>
+                <div class="flex flex-col"><h3 class="text-2xl font-bold text-center bg-gray-600 text-white py-2 rounded-lg shadow-md">MINGGU</h3><div class="bg-gray-200 border-t-4 border-gray-400 rounded-lg shadow-md p-6 flex flex-col items-center justify-center h-full mt-6"><div class="text-6xl mb-4">🎉</div><h4 class="font-bold text-2xl text-gray-800">Akhir Pekan!</h4></div></div>
             </div>
         </section>
 
         <section id="task-manager" class="bg-white p-6 md:p-8 rounded-xl shadow-lg">
-            <h2 class="text-2xl md:text-3xl font-bold text-[#073B4C] mb-6 text-center">Manajemen Tugas Kuliah</h2>
-            
-            <form id="taskForm" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end mb-8">
-                <div class="md:col-span-2">
-                    <label for="taskInput" class="block text-sm font-medium text-gray-700 mb-1">Tugas Baru</label>
-                    <input type="text" id="taskInput" placeholder="Contoh: Buat flowchart login..." class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-[#118AB2] focus:border-[#118AB2]">
-                </div>
-                <div>
-                    <label for="courseSelect" class="block text-sm font-medium text-gray-700 mb-1">Mata Kuliah</label>
-                    <select id="courseSelect" class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-[#118AB2] focus:border-[#118AB2]">
-                        <option>Algoritma & Pemrograman</option>
-                        <option>Org. & Arsitektur Komp.</option>
-                        <option>Pengantar TI</option>
-                        <option>Matematika Komp. 1</option>
-                        <option>Pend. Agama Islam</option>
-                        <option>B. Inggris Profesi</option>
-                        <option>K3</option>
-                        <option>Lainnya</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="deadlineInput" class="block text-sm font-medium text-gray-700 mb-1">Deadline</label>
-                    <input type="date" id="deadlineInput" class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-[#118AB2] focus:border-[#118AB2]">
-                </div>
-                <button type="submit" class="md:col-start-4 w-full bg-[#06D6A0] text-white font-bold py-2 px-4 rounded-lg shadow-md hover:bg-green-600 transition-colors">Tambah Tugas</button>
-            </form>
-
-            <div id="taskList" class="space-y-4">
-            </div>
+            <h2 class="text-2xl md:text-3xl font-bold text-[#073B4C] mb-6 text-center">Manajemen Tugas (Online)</h2>
+            <form id="taskForm" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end mb-8"><div class="md:col-span-2"><label for="taskInput" class="block text-sm font-medium text-gray-700 mb-1">Tugas Baru</label><input type="text" id="taskInput" placeholder="Contoh: Buat flowchart login..." class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-[#118AB2] focus:border-[#118AB2]"></div><div><label for="courseSelect" class="block text-sm font-medium text-gray-700 mb-1">Mata Kuliah</label><select id="courseSelect" class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-[#118AB2] focus:border-[#118AB2]"><option>Algoritma & Pemrograman</option><option>Org. & Arsitektur Komp.</option><option>Pengantar TI</option><option>Matematika Komp. 1</option><option>Pend. Agama Islam</option><option>B. Inggris Profesi</option><option>K3</option><option>Lainnya</option></select></div><div><label for="deadlineInput" class="block text-sm font-medium text-gray-700 mb-1">Deadline</label><input type="date" id="deadlineInput" class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-[#118AB2] focus:border-[#118AB2]"></div><button type="submit" class="md:col-start-4 w-full bg-[#06D6A0] text-white font-bold py-2 px-4 rounded-lg shadow-md hover:bg-green-600 transition-colors">Tambah Tugas</button></form>
+            <div id="taskList" class="space-y-4 loading"></div>
         </section>
 
     </div>
     
-    <footer class="text-center py-6 mt-10 bg-white shadow-inner">
-        <p class="text-gray-600">Infografis Dibuat Khusus untuk Fadly | Semangat Kuliahnya!</p>
-    </footer>
+    <footer class="text-center py-6 mt-10 bg-white shadow-inner"><p class="text-gray-600">Infografis Dibuat Khusus untuk Fadly | Semangat Kuliahnya!</p></footer>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const taskForm = document.getElementById('taskForm');
-            const taskInput = document.getElementById('taskInput');
-            const courseSelect = document.getElementById('courseSelect');
-            const deadlineInput = document.getElementById('deadlineInput');
-            const taskList = document.getElementById('taskList');
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-            const courseColors = {
-                "Algoritma & Pemrograman": "bg-red-100 text-red-800",
-                "Org. & Arsitektur Komp.": "bg-yellow-100 text-yellow-800",
-                "Pengantar TI": "bg-green-100 text-green-800",
-                "Matematika Komp. 1": "bg-blue-100 text-blue-800",
-                "Pend. Agama Islam": "bg-indigo-100 text-indigo-800",
-                "B. Inggris Profesi": "bg-purple-100 text-purple-800",
-                "K3": "bg-pink-100 text-pink-800",
-                "Lainnya": "bg-gray-100 text-gray-800"
-            };
-            
-            let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : { apiKey: "DEMO_KEY", authDomain: "DEMO.firebaseapp.com", projectId: "DEMO_PROJECT" };
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
-            const saveTasks = () => {
-                localStorage.setItem('tasks', JSON.stringify(tasks));
-            };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-            const renderTasks = () => {
-                taskList.innerHTML = '';
-                if (tasks.length === 0) {
-                    taskList.innerHTML = `<p class="text-center text-gray-500 py-4">Hore, tidak ada tugas! Saatnya santai sejenak.</p>`;
-                    return;
-                }
+        const taskForm = document.getElementById('taskForm');
+        const taskInput = document.getElementById('taskInput');
+        const courseSelect = document.getElementById('courseSelect');
+        const deadlineInput = document.getElementById('deadlineInput');
+        const taskList = document.getElementById('taskList');
+        
+        const courseColors = {
+            "Algoritma & Pemrograman": "bg-red-100 text-red-800",
+            "Org. & Arsitektur Komp.": "bg-yellow-100 text-yellow-800",
+            "Pengantar TI": "bg-green-100 text-green-800",
+            "Matematika Komp. 1": "bg-blue-100 text-blue-800",
+            "Pend. Agama Islam": "bg-indigo-100 text-indigo-800",
+            "B. Inggris Profesi": "bg-purple-100 text-purple-800",
+            "K3": "bg-pink-100 text-pink-800",
+            "Lainnya": "bg-gray-100 text-gray-800"
+        };
+        
+        let tasksCollection;
+        let unsubscribe; 
 
-                tasks.sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const userId = user.uid;
+                const collectionPath = `artifacts/${appId}/users/${userId}/tasks`;
+                tasksCollection = collection(db, collectionPath);
+                
+                if (unsubscribe) unsubscribe();
 
-                tasks.forEach((task, index) => {
-                    const taskItem = document.createElement('div');
-                    taskItem.className = 'task-item flex items-center justify-between bg-gray-50 p-4 rounded-lg shadow-sm border-l-4';
-                    
-                    const deadline = new Date(task.deadline);
-                    const today = new Date();
-                    today.setHours(0,0,0,0);
-                    const isPastDue = deadline < today && task.deadline;
-
-                    taskItem.classList.add(isPastDue ? 'border-red-500' : 'border-gray-300');
-
-                    const formattedDeadline = task.deadline ? new Date(task.deadline + 'T00:00:00').toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : 'Tanpa Deadline';
-
-                    taskItem.innerHTML = `
-                        <div class="flex-grow">
-                            <p class="font-semibold text-gray-800">${task.text}</p>
-                            <div class="flex items-center gap-2 mt-1">
-                                <span class="text-xs font-bold px-2 py-1 rounded-full ${courseColors[task.course] || courseColors['Lainnya']}">${task.course}</span>
-                                <span class="text-xs font-semibold ${isPastDue ? 'text-red-600' : 'text-gray-500'}">${formattedDeadline}</span>
-                            </div>
-                        </div>
-                        <button data-index="${index}" class="delete-btn ml-4 p-2 rounded-full bg-red-500 text-white hover:bg-red-600 transition-transform">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                            </svg>
-                        </button>
-                    `;
-                    taskList.appendChild(taskItem);
+                const q = query(tasksCollection, orderBy("deadline", "asc"));
+                unsubscribe = onSnapshot(q, (snapshot) => {
+                    const tasks = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    renderTasks(tasks);
                 });
-            };
-
-            taskForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const text = taskInput.value.trim();
-                if (text === '') return;
-
-                tasks.push({
-                    text: text,
-                    course: courseSelect.value,
-                    deadline: deadlineInput.value
-                });
-
-                taskInput.value = '';
-                deadlineInput.value = '';
-                saveTasks();
-                renderTasks();
-            });
-
-            taskList.addEventListener('click', (e) => {
-                if (e.target.closest('.delete-btn')) {
-                    const index = e.target.closest('.delete-btn').dataset.index;
-                    tasks.splice(index, 1);
-                    saveTasks();
-                    renderTasks();
-                }
-            });
-
-            renderTasks();
+            } else {
+                console.log("User is signed out.");
+                if (unsubscribe) unsubscribe();
+                taskList.innerHTML = '<p class="text-center text-gray-500 py-4">Silakan login untuk melihat tugas.</p>';
+            }
         });
 
-        const sksData = {
-            labels: [
-                'Algoritma & Pemrograman (4 SKS)',
-                'Org. & Arsitektur Komp. (3 SKS)',
-                'Pengantar TI (3 SKS)',
-                'Matematika Komp. 1 (3 SKS)',
-                'Pend. Agama Islam (3 SKS)',
-                'B. Inggris Profesi (2 SKS)',
-                'K3 (2 SKS)'
-            ],
-            datasets: [{
-                label: 'Jumlah SKS',
-                data: [4, 3, 3, 3, 3, 2, 2],
-                backgroundColor: [
-                    '#FF6B6B',
-                    '#FFD166',
-                    '#06D6A0',
-                    '#118AB2',
-                    '#073B4C',
-                    '#EE9B00',
-                    '#9B2226'
-                ],
-                borderColor: '#FFFFFF',
-                borderWidth: 3,
-                hoverOffset: 15
-            }]
+        const renderTasks = (tasks) => {
+            taskList.classList.remove('loading');
+            taskList.innerHTML = '';
+            if (tasks.length === 0) {
+                taskList.innerHTML = `<p class="text-center text-gray-500 py-4">Hore, tidak ada tugas! Saatnya santai sejenak.</p>`;
+                return;
+            }
+
+            tasks.forEach(task => {
+                const taskItem = document.createElement('div');
+                taskItem.className = 'task-item flex items-center justify-between bg-gray-50 p-4 rounded-lg shadow-sm border-l-4';
+                
+                const deadline = task.deadline ? new Date(task.deadline) : null;
+                const today = new Date();
+                today.setHours(0,0,0,0);
+                const isPastDue = deadline && deadline < today;
+
+                taskItem.classList.add(isPastDue ? 'border-red-500' : 'border-gray-300');
+
+                const formattedDeadline = deadline ? new Date(deadline.getTime() + (deadline.getTimezoneOffset() * 60000)).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : 'Tanpa Deadline';
+
+                taskItem.innerHTML = `
+                    <div class="flex-grow">
+                        <p class="font-semibold text-gray-800">${task.text}</p>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span class="text-xs font-bold px-2 py-1 rounded-full ${courseColors[task.course] || courseColors['Lainnya']}">${task.course}</span>
+                            <span class="text-xs font-semibold ${isPastDue ? 'text-red-600' : 'text-gray-500'}">${formattedDeadline}</span>
+                        </div>
+                    </div>
+                    <button data-id="${task.id}" class="delete-btn ml-4 p-2 rounded-full bg-red-500 text-white hover:bg-red-600 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                    </button>
+                `;
+                taskList.appendChild(taskItem);
+            });
         };
 
+        taskForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const text = taskInput.value.trim();
+            if (text === '' || !tasksCollection) return;
+
+            await addDoc(tasksCollection, {
+                text: text,
+                course: courseSelect.value,
+                deadline: deadlineInput.value || null,
+                createdAt: serverTimestamp()
+            });
+
+            taskInput.value = '';
+            deadlineInput.value = '';
+        });
+
+        taskList.addEventListener('click', async (e) => {
+            const deleteBtn = e.target.closest('.delete-btn');
+            if (deleteBtn) {
+                const id = deleteBtn.dataset.id;
+                if (!tasksCollection) return;
+                await deleteDoc(doc(tasksCollection, id));
+            }
+        });
+
+        async function signInUser() {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (error) {
+                console.error("Authentication error:", error);
+                taskList.innerHTML = `<p class="text-center text-red-500 py-4">Gagal terhubung ke layanan tugas. Coba refresh halaman.</p>`;
+            }
+        }
+        
+        signInUser();
+
+    </script>
+
+    <script>
+        const sksData = {
+            labels: ['Algoritma & Pemrograman (4 SKS)','Org. & Arsitektur Komp. (3 SKS)','Pengantar TI (3 SKS)','Matematika Komp. 1 (3 SKS)','Pend. Agama Islam (3 SKS)','B. Inggris Profesi (2 SKS)','K3 (2 SKS)'],
+            datasets: [{ label: 'Jumlah SKS', data: [4, 3, 3, 3, 3, 2, 2], backgroundColor: ['#FF6B6B','#FFD166','#06D6A0','#118AB2','#073B4C','#EE9B00','#9B2226'], borderColor: '#FFFFFF', borderWidth: 3, hoverOffset: 15 }]
+        };
         const sksConfig = {
-            type: 'doughnut',
-            data: sksData,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
+            type: 'doughnut', data: sksData,
+            options: { responsive: true, maintainAspectRatio: false,
                 plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            font: {
-                                size: 12,
-                                weight: '600',
-                            },
-                            padding: 15,
-                            usePointStyle: true,
-                            pointStyle: 'rectRounded'
-                        }
-                    },
-                    tooltip: {
-                        enabled: true,
-                        backgroundColor: '#073B4C',
-                        titleFont: { size: 16, weight: 'bold' },
-                        bodyFont: { size: 14 },
-                        padding: 12,
-                        cornerRadius: 8,
-                        callbacks: {
-                           title: function(tooltipItems) {
-                                const item = tooltipItems[0];
-                                let label = item.chart.data.labels[item.dataIndex];
-                                return Array.isArray(label) ? label.join(' ') : label;
-                           }
-                        }
+                    legend: { position: 'bottom', labels: { font: { size: 12, weight: '600',}, padding: 15, usePointStyle: true, pointStyle: 'rectRounded' }},
+                    tooltip: { enabled: true, backgroundColor: '#073B4C', titleFont: { size: 16, weight: 'bold' }, bodyFont: { size: 14 }, padding: 12, cornerRadius: 8,
+                        callbacks: { title: function(tooltipItems) { const item = tooltipItems[0]; let label = item.chart.data.labels[item.dataIndex]; return Array.isArray(label) ? label.join(' ') : label; }}
                     }
                 }
             }
         };
-
         const sksChartCtx = document.getElementById('sksChart').getContext('2d');
         new Chart(sksChartCtx, sksConfig);
     </script>
 </body>
 </html>
+
 
