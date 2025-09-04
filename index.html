@@ -12,6 +12,7 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
         }
         .chart-container {
             position: relative;
@@ -27,6 +28,15 @@
                 height: 400px;
             }
         }
+        .task-item:hover .delete-btn {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .delete-btn {
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.2s ease-in-out;
+        }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
@@ -36,17 +46,19 @@
         NEITHER Mermaid JS NOR SVG were used in this file. All visualizations are done via Chart.js (Canvas) or styled HTML elements.
         
         Narrative Plan:
-        1. Header: Welcome message with student details.
-        2. Overview: Key stats (Total SKS, Mata Kuliah, Hari Aktif) presented as big numbers.
-        3. SKS Distribution Analysis: A donut chart showing the proportional credit load of each course.
-        4. Weekly Schedule Breakdown: A grid-based timeline for all 7 days, reflecting the latest schedule change for the Algorithm course.
-        5. Important Alert: A callout box for missing information.
+        1. Header: Welcome message.
+        2. Overview: Key stats as big numbers.
+        3. SKS Distribution Analysis: A donut chart for proportional credit load.
+        4. Weekly Schedule Breakdown: Grid-based timeline for all 7 days.
+        5. Task Manager: An interactive to-do list with localStorage persistence for adding, viewing, and deleting tasks.
+        6. Important Alert: Callout box for missing information.
 
         Visualization Choices:
-        - Key Stats: Goal: Inform -> Chosen Visualization: Single Big Number -> Justification: High-impact display. Method: Styled HTML (No SVG).
-        - SKS Distribution: Goal: Compare/Inform -> Chosen Visualization: Donut Chart -> Justification: Shows proportional composition. Library: Chart.js/Canvas (No SVG).
-        - Weekly Schedule: Goal: Organize -> Chosen Visualization: Grid-based Timeline -> Justification: Intuitive layout for all 7 days. Method: Styled HTML with Tailwind (No SVG, No Mermaid JS).
-        - Alert: Goal: Inform -> Chosen Visualization: Callout Box -> Justification: Draws attention to critical info. Method: Styled HTML (No SVG).
+        - Key Stats: Goal: Inform -> Method: Styled HTML (No SVG).
+        - SKS Distribution: Goal: Compare/Inform -> Library: Chart.js/Canvas (No SVG).
+        - Weekly Schedule: Goal: Organize -> Method: Styled HTML with Tailwind (No SVG).
+        - Task Manager: Goal: Organize -> Method: Interactive HTML form and list, powered by JavaScript and localStorage (No SVG).
+        - Alert: Goal: Inform -> Method: Styled HTML (No SVG).
     -->
 
     <div class="container mx-auto p-4 md:p-8 max-w-7xl">
@@ -80,24 +92,23 @@
 
         <section id="sks-distribution" class="bg-white p-6 md:p-8 rounded-xl shadow-lg mb-12">
             <h2 class="text-2xl md:text-3xl font-bold text-[#073B4C] mb-1 text-center">Komposisi Beban SKS Semester Ini</h2>
-            <p class="text-center text-gray-600 mb-6">Lihat porsi setiap mata kuliah dari total 20 SKS kamu. Mata kuliah dengan SKS terbesar mengambil "potongan kue" paling besar!</p>
+            <p class="text-center text-gray-600 mb-6">Lihat porsi setiap mata kuliah dari total 20 SKS kamu.</p>
             <div class="chart-container">
                 <canvas id="sksChart"></canvas>
             </div>
         </section>
 
-        <section id="weekly-schedule">
+        <section id="weekly-schedule" class="mb-12">
             <h2 class="text-2xl md:text-3xl font-bold text-[#073B4C] mb-6 text-center">Jadwal Mingguan Terperinci</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                
-                <div class="flex flex-col space-y-6">
+                 <div class="flex flex-col space-y-6">
                     <h3 class="text-2xl font-bold text-center bg-[#073B4C] text-white py-2 rounded-lg shadow-md">SENIN</h3>
                     <div class="bg-white p-4 rounded-lg shadow-md border-t-4 border-[#118AB2]">
                         <p class="font-bold text-gray-500 text-sm">07.00 - 09.35</p>
                         <p class="font-semibold text-gray-500 text-xs mt-1">🕒 Jam ke-1 s/d 3</p>
                         <h4 class="font-bold text-lg text-[#118AB2] mt-2">Pengantar Teknologi Informasi</h4>
                         <p class="text-gray-600">Dosen: Heni Vidia Sari</p>
-                        <p class="font-semibold text-gray-800 mt-2">📍 A20 ????</p>
+                        <p class="font-semibold text-gray-800 mt-2">📍 B11-414</p>
                     </div>
                     <div class="bg-white p-4 rounded-lg shadow-md border-t-4 border-[#118AB2]">
                         <p class="font-bold text-gray-500 text-sm">09.35 - 12.10</p>
@@ -201,7 +212,38 @@
                         <p class="text-gray-600 text-center mt-2">Saatnya recharge energi buat minggu depan!</p>
                     </div>
                 </div>
+            </div>
+        </section>
 
+        <section id="task-manager" class="bg-white p-6 md:p-8 rounded-xl shadow-lg">
+            <h2 class="text-2xl md:text-3xl font-bold text-[#073B4C] mb-6 text-center">Manajemen Tugas Kuliah</h2>
+            
+            <form id="taskForm" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end mb-8">
+                <div class="md:col-span-2">
+                    <label for="taskInput" class="block text-sm font-medium text-gray-700 mb-1">Tugas Baru</label>
+                    <input type="text" id="taskInput" placeholder="Contoh: Buat flowchart login..." class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-[#118AB2] focus:border-[#118AB2]">
+                </div>
+                <div>
+                    <label for="courseSelect" class="block text-sm font-medium text-gray-700 mb-1">Mata Kuliah</label>
+                    <select id="courseSelect" class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-[#118AB2] focus:border-[#118AB2]">
+                        <option>Algoritma & Pemrograman</option>
+                        <option>Org. & Arsitektur Komp.</option>
+                        <option>Pengantar TI</option>
+                        <option>Matematika Komp. 1</option>
+                        <option>Pend. Agama Islam</option>
+                        <option>B. Inggris Profesi</option>
+                        <option>K3</option>
+                        <option>Lainnya</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="deadlineInput" class="block text-sm font-medium text-gray-700 mb-1">Deadline</label>
+                    <input type="date" id="deadlineInput" class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-[#118AB2] focus:border-[#118AB2]">
+                </div>
+                <button type="submit" class="md:col-start-4 w-full bg-[#06D6A0] text-white font-bold py-2 px-4 rounded-lg shadow-md hover:bg-green-600 transition-colors">Tambah Tugas</button>
+            </form>
+
+            <div id="taskList" class="space-y-4">
             </div>
         </section>
 
@@ -212,6 +254,99 @@
     </footer>
 
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const taskForm = document.getElementById('taskForm');
+            const taskInput = document.getElementById('taskInput');
+            const courseSelect = document.getElementById('courseSelect');
+            const deadlineInput = document.getElementById('deadlineInput');
+            const taskList = document.getElementById('taskList');
+
+            const courseColors = {
+                "Algoritma & Pemrograman": "bg-red-100 text-red-800",
+                "Org. & Arsitektur Komp.": "bg-yellow-100 text-yellow-800",
+                "Pengantar TI": "bg-green-100 text-green-800",
+                "Matematika Komp. 1": "bg-blue-100 text-blue-800",
+                "Pend. Agama Islam": "bg-indigo-100 text-indigo-800",
+                "B. Inggris Profesi": "bg-purple-100 text-purple-800",
+                "K3": "bg-pink-100 text-pink-800",
+                "Lainnya": "bg-gray-100 text-gray-800"
+            };
+            
+            let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
+            const saveTasks = () => {
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+            };
+
+            const renderTasks = () => {
+                taskList.innerHTML = '';
+                if (tasks.length === 0) {
+                    taskList.innerHTML = `<p class="text-center text-gray-500 py-4">Hore, tidak ada tugas! Saatnya santai sejenak.</p>`;
+                    return;
+                }
+
+                tasks.sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
+
+                tasks.forEach((task, index) => {
+                    const taskItem = document.createElement('div');
+                    taskItem.className = 'task-item flex items-center justify-between bg-gray-50 p-4 rounded-lg shadow-sm border-l-4';
+                    
+                    const deadline = new Date(task.deadline);
+                    const today = new Date();
+                    today.setHours(0,0,0,0);
+                    const isPastDue = deadline < today && task.deadline;
+
+                    taskItem.classList.add(isPastDue ? 'border-red-500' : 'border-gray-300');
+
+                    const formattedDeadline = task.deadline ? new Date(task.deadline + 'T00:00:00').toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : 'Tanpa Deadline';
+
+                    taskItem.innerHTML = `
+                        <div class="flex-grow">
+                            <p class="font-semibold text-gray-800">${task.text}</p>
+                            <div class="flex items-center gap-2 mt-1">
+                                <span class="text-xs font-bold px-2 py-1 rounded-full ${courseColors[task.course] || courseColors['Lainnya']}">${task.course}</span>
+                                <span class="text-xs font-semibold ${isPastDue ? 'text-red-600' : 'text-gray-500'}">${formattedDeadline}</span>
+                            </div>
+                        </div>
+                        <button data-index="${index}" class="delete-btn ml-4 p-2 rounded-full bg-red-500 text-white hover:bg-red-600 transition-transform">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </button>
+                    `;
+                    taskList.appendChild(taskItem);
+                });
+            };
+
+            taskForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const text = taskInput.value.trim();
+                if (text === '') return;
+
+                tasks.push({
+                    text: text,
+                    course: courseSelect.value,
+                    deadline: deadlineInput.value
+                });
+
+                taskInput.value = '';
+                deadlineInput.value = '';
+                saveTasks();
+                renderTasks();
+            });
+
+            taskList.addEventListener('click', (e) => {
+                if (e.target.closest('.delete-btn')) {
+                    const index = e.target.closest('.delete-btn').dataset.index;
+                    tasks.splice(index, 1);
+                    saveTasks();
+                    renderTasks();
+                }
+            });
+
+            renderTasks();
+        });
+
         const sksData = {
             labels: [
                 'Algoritma & Pemrograman (4 SKS)',
@@ -262,24 +397,15 @@
                     tooltip: {
                         enabled: true,
                         backgroundColor: '#073B4C',
-                        titleFont: {
-                            size: 16,
-                            weight: 'bold'
-                        },
-                        bodyFont: {
-                            size: 14
-                        },
+                        titleFont: { size: 16, weight: 'bold' },
+                        bodyFont: { size: 14 },
                         padding: 12,
                         cornerRadius: 8,
                         callbacks: {
                            title: function(tooltipItems) {
                                 const item = tooltipItems[0];
                                 let label = item.chart.data.labels[item.dataIndex];
-                                if (Array.isArray(label)) {
-                                  return label.join(' ');
-                                } else {
-                                  return label;
-                                }
+                                return Array.isArray(label) ? label.join(' ') : label;
                            }
                         }
                     }
@@ -292,5 +418,4 @@
     </script>
 </body>
 </html>
-
 
