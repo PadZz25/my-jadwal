@@ -3,36 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard AI Mahasiswa - Fadly M.Z.</title>
+    <title>Dashboard Mahasiswa Internasional - Fadly M.Z.</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
-        .chart-container { position: relative; width: 100%; max-width: 450px; margin: auto; height: 450px; max-height: 60vh; }
-        @media (max-width: 768px) { .chart-container { height: 400px; } }
-        .task-item:hover .delete-btn { opacity: 1; transform: scale(1); }
-        .delete-btn { opacity: 0; transform: scale(0.8); transition: all 0.2s ease-in-out; }
-        .gradient-text { background: linear-gradient(to right, #118AB2, #06D6A0); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .dark .dark\:gradient-text { background: linear-gradient(to right, #67e8f9, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
-        .reveal.visible { opacity: 1; transform: translateY(0); }
-        .card-hover { transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; }
-        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
-        #chat-widget { transition: transform 0.3s ease-in-out, opacity 0.3s; }
-        #chat-bubble { animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-        .message-bubble { max-width: 80%; }
-        .message-bubble.user { background-color: #118AB2; color: white; }
-        .message-bubble.bot { background-color: #e5e7eb; color: #1f2937; }
-        .dark .message-bubble.bot { background-color: #374151; color: #f3f4f6; }
-        .typing-indicator span { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background-color: #9ca3af; animation: typing 1s infinite; }
-        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
-        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes typing { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 450px;
+            max-height: 60vh;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .task-item:hover .delete-btn {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .delete-btn {
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.2s ease-in-out;
+        }
+        .gradient-text {
+            background: linear-gradient(to right, #118AB2, #06D6A0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .card-hover {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .dark .dark\:gradient-text {
+            background: linear-gradient(to right, #67e8f9, #34d399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
     </style>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors duration-300">
@@ -41,11 +71,11 @@
 
         <header class="text-center mb-10 relative">
             <h1 id="greeting" class="text-2xl md:text-3xl font-bold text-gray-600 dark:text-gray-400">Selamat Pagi, Fadly!</h1>
-            <h2 class="text-4xl md:text-5xl font-black gradient-text dark:dark:gradient-text">AI Student Dashboard</h2>
+            <h2 class="text-4xl md:text-5xl font-black gradient-text dark:dark:gradient-text">Student Dashboard</h2>
             <p class="text-lg text-gray-500 mt-2">Kelas Internasional | S1 Teknik Informatika</p>
              <button id="theme-toggle" class="absolute top-0 right-0 p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none">
-                <svg id="theme-toggle-sun" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                <svg id="theme-toggle-moon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                <svg id="theme-toggle-sun" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                <svg id="theme-toggle-moon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
             </button>
         </header>
 
@@ -56,110 +86,150 @@
                 <p id="next-class-info" class="font-bold text-xl text-gray-700 dark:text-gray-300">Memeriksa jadwal...</p>
             </div>
         </section>
-        
-        <section id="overview" class="mb-12 reveal"><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-center"><div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border-l-4 border-[#118AB2] card-hover"><h3 class="text-5xl font-extrabold text-[#118AB2] dark:text-cyan-400">20</h3><p class="text-lg font-semibold mt-2">Total SKS</p></div><div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border-l-4 border-[#06D6A0] card-hover"><h3 class="text-5xl font-extrabold text-[#06D6A0] dark:text-green-400">7</h3><p class="text-lg font-semibold mt-2">Mata Kuliah</p></div><div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border-l-4 border-[#FFD166] card-hover"><h3 class="text-5xl font-extrabold text-[#FFD166] dark:text-yellow-400">5</h3><p class="text-lg font-semibold mt-2">Hari Kuliah Aktif</p></div><div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border-l-4 border-[#FF6B6B] card-hover"><h3 class="text-5xl font-extrabold text-[#FF6B6B] dark:text-red-400">2</h3><p class="text-lg font-semibold mt-2">Hari Tanpa Kelas</p></div></div></section>
-        <section id="sks-distribution" class="bg-white dark:bg-gray-800 p-6 md:p-8 rounded-xl shadow-lg mb-12 reveal"><h2 class="text-2xl md:text-3xl font-bold text-center">Komposisi Beban SKS</h2><p class="text-center text-gray-600 dark:text-gray-400 mb-6">Visualisasi porsi setiap mata kuliah dari total 20 SKS kamu.</p><div class="chart-container"><canvas id="sksChart"></canvas></div></section>
 
-        <section id="ai-planner" class="bg-white dark:bg-gray-800 p-6 md:p-8 rounded-xl shadow-lg mb-12 reveal">
-            <h2 class="text-2xl md:text-3xl font-bold text-center">✨ Rencana Belajar AI</h2>
-            <p class="text-center text-gray-600 dark:text-gray-400 mb-6">Pilih mata kuliah dan target waktu, biarkan AI membuatkanmu rencana belajar!</p>
-            <div class="flex flex-col sm:flex-row gap-4 mb-4">
-                <select id="study-course-select" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-gray-50 dark:bg-gray-700"></select>
-                <select id="study-timeframe-select" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-gray-50 dark:bg-gray-700">
-                    <option>1 Minggu sebelum UTS</option><option>3 Hari sebelum Kuis</option><option>2 Minggu sebelum UAS</option>
-                </select>
-                <button id="generate-plan-btn" class="w-full sm:w-auto bg-[#118AB2] text-white font-bold py-2 px-6 rounded-lg shadow-md hover:bg-cyan-700 transition-colors">Buat Rencana</button>
+        <section id="overview" class="mb-12 reveal">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+                 <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border-l-4 border-[#118AB2] card-hover">
+                    <h3 class="text-5xl font-extrabold text-[#118AB2] dark:text-cyan-400">20</h3>
+                    <p class="text-lg font-semibold mt-2">Total SKS</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border-l-4 border-[#06D6A0] card-hover">
+                    <h3 class="text-5xl font-extrabold text-[#06D6A0] dark:text-green-400">7</h3>
+                    <p class="text-lg font-semibold mt-2">Mata Kuliah</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border-l-4 border-[#FFD166] card-hover">
+                    <h3 class="text-5xl font-extrabold text-[#FFD166] dark:text-yellow-400">5</h3>
+                    <p class="text-lg font-semibold mt-2">Hari Kuliah Aktif</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border-l-4 border-[#FF6B6B] card-hover">
+                    <h3 class="text-5xl font-extrabold text-[#FF6B6B] dark:text-red-400">2</h3>
+                    <p class="text-lg font-semibold mt-2">Hari Tanpa Kelas</p>
+                </div>
             </div>
-            <div id="study-plan-result" class="prose dark:prose-invert max-w-none p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg min-h-[100px]"></div>
         </section>
 
-        <section id="weekly-schedule" class="mb-12 reveal"><h2 class="text-2xl md:text-3xl font-bold text-center mb-6">Jadwal Mingguan</h2><div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"><div class="flex flex-col space-y-6"><h3 class="text-2xl font-bold text-center bg-[#073B4C] dark:bg-gray-700 text-white py-2 rounded-lg shadow-md">SENIN</h3><div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border-t-4 border-[#FF6B6B] card-hover"><p class="font-bold text-gray-500 dark:text-gray-400 text-sm">07.00 - 10.25</p><p class="font-semibold text-gray-500 dark:text-gray-400 text-xs mt-1">🕒 Jam ke-1 s/d 4</p><h4 class="font-bold text-lg mt-2">Programming and Algorithm</h4><p class="text-gray-600 dark:text-gray-300">Dosen: Muhammad Jauharul Fuady</p><p class="font-semibold mt-2">📍 B11-414</p></div><div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border-t-4 border-[#FFD166] card-hover"><p class="font-bold text-gray-500 dark:text-gray-400 text-sm">10.30 - 12.10</p><p class="font-semibold text-gray-500 dark:text-gray-400 text-xs mt-1">🕒 Jam ke-5 s/d 6</p><h4 class="font-bold text-lg mt-2">English for Professional Purposes</h4><p class="text-gray-600 dark:text-gray-300">Dosen: Muhammad Iqbal Akbar</p><p class="font-semibold mt-2">📍 A20-211</p></div></div><div class="flex flex-col space-y-6"><h3 class="text-2xl font-bold text-center bg-[#073B4C] dark:bg-gray-700 text-white py-2 rounded-lg shadow-md">SELASA</h3><div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border-t-4 border-[#06D6A0] card-hover"><p class="font-bold text-gray-500 dark:text-gray-400 text-sm">07.00 - 09.35</p><p class="font-semibold text-gray-500 dark:text-gray-400 text-xs mt-1">🕒 Jam ke-1 s/d 3</p><h4 class="font-bold text-lg mt-2">Organization and Computer Architecture</h4><p class="text-gray-600 dark:text-gray-300">Dosen: Muhammad Ashar</p><p class="font-semibold mt-2">📍 B12-205</p></div><div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border-t-4 border-[#118AB2] card-hover"><p class="font-bold text-gray-500 dark:text-gray-400 text-sm">09.35 - 12.10</p><p class="font-semibold text-gray-500 dark:text-gray-400 text-xs mt-1">🕒 Jam ke-4 s/d 6</p><h4 class="font-bold text-lg mt-2">Introduction to Information Technology</h4><p class="text-gray-600 dark:text-gray-300">Dosen: Heni Vidia Sari</p><p class="font-semibold mt-2">📍 A19-405</p></div></div><div class="flex flex-col space-y-6"><h3 class="text-2xl font-bold text-center bg-[#073B4C] dark:bg-gray-700 text-white py-2 rounded-lg shadow-md">RABU</h3><div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border-t-4 border-[#118AB2] card-hover"><p class="font-bold text-gray-500 dark:text-gray-400 text-sm">09.35 - 12.10</p><p class="font-semibold text-gray-500 dark:text-gray-400 text-xs mt-1">🕒 Jam ke-4 s/d 6</p><h4 class="font-bold text-lg mt-2">Computer Mathematics 1</h4><p class="text-gray-600 dark:text-gray-300">Dosen: Muhammad Iqbal Akbar</p><p class="font-semibold mt-2">📍 A20-208</p></div><div class="bg-green-100 dark:bg-green-900/50 p-4 rounded-lg shadow-md border-t-4 border-green-500 text-center card-hover"><p class="font-bold text-gray-500 dark:text-gray-400 text-sm">12.10 - 14.55</p><h4 class="font-bold text-lg text-green-800 dark:text-green-300">☕ JEDA SIANG PANJANG ☕</h4></div><div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border-t-4 border-[#073B4C] card-hover"><p class="font-bold text-gray-500 dark:text-gray-400 text-sm">14.55 - 16.35</p><p class="font-semibold text-gray-500 dark:text-gray-400 text-xs mt-1">🕒 Jam ke-9 s/d 10</p><h4 class="font-bold text-lg mt-2">Islamic Religion Education</h4><p class="text-gray-600 dark:text-gray-300">Dosen: Muhammad Alfan</p><p class="font-semibold mt-2">📍 A19-710</p></div></div><div class="flex flex-col"><h3 class="text-2xl font-bold text-center bg-gray-600 text-white py-2 rounded-lg shadow-md">KAMIS</h3><div class="bg-gray-200 dark:bg-gray-800/50 border-t-4 border-gray-400 rounded-lg shadow-md p-6 flex flex-col items-center justify-center h-full mt-6 card-hover"><div class="text-6xl mb-4">😴</div><h4 class="font-bold text-2xl">Hari Kosong</h4></div></div><div class="flex flex-col space-y-6"><h3 class="text-2xl font-bold text-center bg-[#073B4C] dark:bg-gray-700 text-white py-2 rounded-lg shadow-md">JUMAT</h3><div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border-t-4 border-[#EE9B00] card-hover"><p class="font-bold text-gray-500 dark:text-gray-400 text-sm">07.00 - 08.40</p><p class="font-semibold text-gray-500 dark:text-gray-400 text-xs mt-1">🕒 Jam ke-1 s/d 2</p><h4 class="font-bold text-lg mt-2">Occupational Health and Safety</h4><p class="text-gray-600 dark:text-gray-300">Dosen: Muis Muhtadi</p><p class="font-semibold mt-2">📍 B12-113</p></div></div><div class="flex flex-col space-y-6"><h3 class="text-2xl font-bold text-center bg-[#073B4C] dark:bg-gray-700 text-white py-2 rounded-lg shadow-md">SABTU</h3><div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border-t-4 border-[#073B4C] card-hover"><p class="font-bold text-gray-500 dark:text-gray-400 text-sm">07.00 - 10.25</p><p class="font-semibold text-gray-500 dark:text-gray-400 text-xs mt-1">🕒 Jam ke-1 s/d 4</p><h4 class="font-bold text-lg mt-2">Islamic Religion Education</h4><p class="text-gray-600 dark:text-gray-300">Dosen: Muhammad Alfan</p><p class="font-semibold mt-2">📍 F2.1</p></div></div><div class="flex flex-col"><h3 class="text-2xl font-bold text-center bg-gray-600 text-white py-2 rounded-lg shadow-md">MINGGU</h3><div class="bg-gray-200 dark:bg-gray-800/50 border-t-4 border-gray-400 rounded-lg shadow-md p-6 flex flex-col items-center justify-center h-full mt-6 card-hover"><div class="text-6xl mb-4">🎉</div><h4 class="font-bold text-2xl">Akhir Pekan!</h4></div></div></div></section>
+        <section id="sks-distribution" class="bg-white dark:bg-gray-800 p-6 md:p-8 rounded-xl shadow-lg mb-12 reveal">
+            <h2 class="text-2xl md:text-3xl font-bold text-center">Komposisi Beban SKS</h2>
+            <p class="text-center text-gray-600 dark:text-gray-400 mb-6">Visualisasi porsi setiap mata kuliah dari total 20 SKS kamu.</p>
+            <div class="chart-container">
+                <canvas id="sksChart"></canvas>
+            </div>
+        </section>
+
+        <section id="weekly-schedule" class="mb-12 reveal">
+            <h2 class="text-2xl md:text-3xl font-bold text-center mb-6">Jadwal Mingguan</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                
+                <div class="flex flex-col space-y-6">
+                    <h3 class="text-2xl font-bold text-center bg-[#073B4C] dark:bg-gray-700 text-white py-2 rounded-lg shadow-md">SENIN</h3>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border-t-4 border-[#FF6B6B] card-hover">
+                        <p class="font-bold text-gray-500 dark:text-gray-400 text-sm">07.00 - 10.25</p>
+                        <p class="font-semibold text-gray-500 dark:text-gray-400 text-xs mt-1">🕒 Jam ke-1 s/d 4</p>
+                        <h4 class="font-bold text-lg mt-2">Programming and Algorithm</h4>
+                        <p class="text-gray-600 dark:text-gray-300">Dosen: Muhammad Jauharul Fuady</p>
+                        <p class="font-semibold mt-2">📍 B11-414</p>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border-t-4 border-[#FFD166] card-hover">
+                        <p class="font-bold text-gray-500 dark:text-gray-400 text-sm">10.30 - 12.10</p>
+                        <p class="font-semibold text-gray-500 dark:text-gray-400 text-xs mt-1">🕒 Jam ke-5 s/d 6</p>
+                        <h4 class="font-bold text-lg mt-2">English for Professional Purposes</h4>
+                        <p class="text-gray-600 dark:text-gray-300">Dosen: Muhammad Iqbal Akbar</p>
+                        <p class="font-semibold mt-2">📍 A20-211</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-col space-y-6">
+                    <h3 class="text-2xl font-bold text-center bg-[#073B4C] dark:bg-gray-700 text-white py-2 rounded-lg shadow-md">SELASA</h3>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border-t-4 border-[#06D6A0] card-hover">
+                        <p class="font-bold text-gray-500 dark:text-gray-400 text-sm">07.00 - 09.35</p>
+                        <p class="font-semibold text-gray-500 dark:text-gray-400 text-xs mt-1">🕒 Jam ke-1 s/d 3</p>
+                        <h4 class="font-bold text-lg mt-2">Organization and Computer Architecture</h4>
+                        <p class="text-gray-600 dark:text-gray-300">Dosen: Muhammad Ashar</p>
+                        <p class="font-semibold mt-2">📍 B12-205</p>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border-t-4 border-[#118AB2] card-hover">
+                        <p class="font-bold text-gray-500 dark:text-gray-400 text-sm">09.35 - 12.10</p>
+                        <p class="font-semibold text-gray-500 dark:text-gray-400 text-xs mt-1">🕒 Jam ke-4 s/d 6</p>
+                        <h4 class="font-bold text-lg mt-2">Introduction to Information Technology</h4>
+                        <p class="text-gray-600 dark:text-gray-300">Dosen: Heni Vidia Sari</p>
+                        <p class="font-semibold mt-2">📍 A19-405</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-col space-y-6">
+                    <h3 class="text-2xl font-bold text-center bg-[#073B4C] dark:bg-gray-700 text-white py-2 rounded-lg shadow-md">RABU</h3>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border-t-4 border-[#118AB2] card-hover">
+                        <p class="font-bold text-gray-500 dark:text-gray-400 text-sm">09.35 - 12.10</p>
+                        <p class="font-semibold text-gray-500 dark:text-gray-400 text-xs mt-1">🕒 Jam ke-4 s/d 6</p>
+                        <h4 class="font-bold text-lg mt-2">Computer Mathematics 1</h4>
+                        <p class="text-gray-600 dark:text-gray-300">Dosen: Muhammad Iqbal Akbar</p>
+                        <p class="font-semibold mt-2">📍 A20-208</p>
+                    </div>
+                    <div class="bg-green-100 dark:bg-green-900/50 p-4 rounded-lg shadow-md border-t-4 border-green-500 text-center card-hover">
+                        <p class="font-bold text-gray-500 dark:text-gray-400 text-sm">12.10 - 14.55</p>
+                        <h4 class="font-bold text-lg text-green-800 dark:text-green-300">☕ JEDA SIANG PANJANG ☕</h4>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border-t-4 border-[#073B4C] card-hover">
+                        <p class="font-bold text-gray-500 dark:text-gray-400 text-sm">14.55 - 16.35</p>
+                        <p class="font-semibold text-gray-500 dark:text-gray-400 text-xs mt-1">🕒 Jam ke-9 s/d 10</p>
+                        <h4 class="font-bold text-lg mt-2">Islamic Religion Education</h4>
+                        <p class="text-gray-600 dark:text-gray-300">Dosen: Muhammad Alfan</p>
+                        <p class="font-semibold mt-2">📍 A19-710</p>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col"><h3 class="text-2xl font-bold text-center bg-gray-600 text-white py-2 rounded-lg shadow-md">KAMIS</h3><div class="bg-gray-200 dark:bg-gray-800/50 border-t-4 border-gray-400 rounded-lg shadow-md p-6 flex flex-col items-center justify-center h-full mt-6 card-hover"><div class="text-6xl mb-4">😴</div><h4 class="font-bold text-2xl">Hari Kosong</h4></div></div>
+
+                <div class="flex flex-col space-y-6">
+                    <h3 class="text-2xl font-bold text-center bg-[#073B4C] dark:bg-gray-700 text-white py-2 rounded-lg shadow-md">JUMAT</h3>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border-t-4 border-[#EE9B00] card-hover">
+                        <p class="font-bold text-gray-500 dark:text-gray-400 text-sm">07.00 - 08.40</p>
+                        <p class="font-semibold text-gray-500 dark:text-gray-400 text-xs mt-1">🕒 Jam ke-1 s/d 2</p>
+                        <h4 class="font-bold text-lg mt-2">Occupational Health and Safety</h4>
+                        <p class="text-gray-600 dark:text-gray-300">Dosen: Muis Muhtadi</p>
+                        <p class="font-semibold mt-2">📍 B12-113</p>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col space-y-6">
+                    <h3 class="text-2xl font-bold text-center bg-[#073B4C] dark:bg-gray-700 text-white py-2 rounded-lg shadow-md">SABTU</h3>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border-t-4 border-[#073B4C] card-hover">
+                        <p class="font-bold text-gray-500 dark:text-gray-400 text-sm">07.00 - 10.25</p>
+                        <p class="font-semibold text-gray-500 dark:text-gray-400 text-xs mt-1">🕒 Jam ke-1 s/d 4</p>
+                        <h4 class="font-bold text-lg mt-2">Islamic Religion Education</h4>
+                        <p class="text-gray-600 dark:text-gray-300">Dosen: Muhammad Alfan</p>
+                        <p class="font-semibold mt-2">📍 F2.1</p>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col"><h3 class="text-2xl font-bold text-center bg-gray-600 text-white py-2 rounded-lg shadow-md">MINGGU</h3><div class="bg-gray-200 dark:bg-gray-800/50 border-t-4 border-gray-400 rounded-lg shadow-md p-6 flex flex-col items-center justify-center h-full mt-6 card-hover"><div class="text-6xl mb-4">🎉</div><h4 class="font-bold text-2xl">Akhir Pekan!</h4></div></div>
+            </div>
+        </section>
 
         <section id="task-manager" class="bg-white dark:bg-gray-800 p-6 md:p-8 rounded-xl shadow-lg reveal">
             <h2 class="text-2xl md:text-3xl font-bold text-center">Manajemen Tugas</h2>
-            <form id="taskForm" class="grid grid-cols-1 md:grid-cols-5 gap-4 items-end mb-8">
-                <div class="md:col-span-2"><label for="taskInput" class="block text-sm font-medium mb-1">Tugas Baru</label><input type="text" id="taskInput" placeholder="Contoh: Research paper on AI ethics..." class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-gray-50 dark:bg-gray-700"></div>
-                <div><label for="courseSelect" class="block text-sm font-medium mb-1">Mata Kuliah</label><select id="courseSelect" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-gray-50 dark:bg-gray-700"></select></div>
-                <div><label for="deadlineInput" class="block text-sm font-medium mb-1">Deadline</label><input type="date" id="deadlineInput" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-gray-50 dark:bg-gray-700"></div>
-                <div class="flex space-x-2">
-                    <button type="submit" class="flex-1 bg-[#06D6A0] text-white font-bold py-2 px-4 rounded-lg shadow-md hover:bg-green-600 transition-colors">Tambah</button>
-                    <button type="button" id="ai-breakdown-btn" class="bg-yellow-400 text-yellow-900 font-bold p-2.5 rounded-lg shadow-md hover:bg-yellow-500 transition-colors" title="Buat Rincian Otomatis dengan AI">✨</button>
-                </div>
-            </form>
+            <form id="taskForm" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end mb-8"><div class="md:col-span-2"><label for="taskInput" class="block text-sm font-medium mb-1">Tugas Baru</label><input type="text" id="taskInput" placeholder="Contoh: Research paper on AI ethics..." class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-gray-50 dark:bg-gray-700"></div><div><label for="courseSelect" class="block text-sm font-medium mb-1">Mata Kuliah</label><select id="courseSelect" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-gray-50 dark:bg-gray-700"></select></div><div><label for="deadlineInput" class="block text-sm font-medium mb-1">Deadline</label><input type="date" id="deadlineInput" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-gray-50 dark:bg-gray-700"></div><button type="submit" class="w-full bg-[#06D6A0] text-white font-bold py-2 px-4 rounded-lg shadow-md hover:bg-green-600 transition-colors">Tambah Tugas</button></form>
             <div id="taskList" class="space-y-4"></div>
         </section>
 
     </div>
     
     <footer class="text-center py-6 mt-10 bg-white dark:bg-gray-800 shadow-inner"><p class="text-gray-600 dark:text-gray-400">Dibuat Khusus untuk Fadly | Semangat di Kelas Internasional!</p></footer>
-    
-    <!-- Study Buddy Chat Widget -->
-    <div id="chat-bubble" class="fixed bottom-5 right-5 w-16 h-16 bg-[#073B4C] rounded-full flex items-center justify-center cursor-pointer shadow-lg z-50">
-        <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
-    </div>
-    <div id="chat-widget" class="fixed bottom-24 right-5 w-[90vw] max-w-md h-[70vh] bg-white dark:bg-gray-800 rounded-xl shadow-2xl flex flex-col z-40 transform scale-95 opacity-0 pointer-events-none">
-        <div class="p-4 border-b dark:border-gray-700 flex justify-between items-center">
-            <h3 class="font-bold text-lg">✨ Study Buddy</h3>
-            <button id="close-chat" class="p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600">&times;</button>
-        </div>
-        <div id="chat-box" class="flex-1 p-4 overflow-y-auto space-y-4"></div>
-        <div class="p-4 border-t dark:border-gray-700">
-            <form id="chat-form" class="flex items-center space-x-2">
-                <input type="text" id="chat-input" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700" placeholder="Tanya apa saja...">
-                <button type="submit" class="bg-[#118AB2] text-white p-2.5 rounded-lg shadow-md hover:bg-cyan-700"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></button>
-            </form>
-        </div>
-    </div>
-
 
     <script>
-        // --- CONFIGURATION ---
-        const API_KEY = ""; // Leave blank
-        const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${API_KEY}`;
-        const courseList = ['Programming and Algorithm','Computer Architecture','Intro to IT','Computer Mathematics 1','Islamic Religion','English for Professional Purposes','Occupational Health and Safety','Lainnya'];
-        
-        // --- UTILITY FUNCTIONS ---
-        async function callGeminiAPI(payload) {
-            try {
-                const response = await fetch(GEMINI_API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                if (!response.ok) {
-                    console.error("API Error Response:", await response.text());
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return await response.json();
-            } catch (error) {
-                console.error("Error calling Gemini API:", error);
-                return null;
-            }
-        }
-
-        function populateSelect(selectElement, options) {
-            options.forEach(optionText => {
-                const option = document.createElement('option');
-                option.textContent = optionText;
-                selectElement.appendChild(option);
-            });
-        }
-
-        // --- CORE LOGIC ---
         document.addEventListener('DOMContentLoaded', () => {
-            
+            const courseList = ['Programming and Algorithm','Computer Architecture','Intro to IT','Computer Mathematics 1','Islamic Religion','English for Professional Purposes','Occupational Health and Safety','Lainnya'];
+
+            // --- INITIALIZATION ---
             initSKSChart();
             initThemeToggler();
             initDynamicGreeting();
             initCountdownTimer();
             initScrollReveal();
-            initTaskManager();
-            initStudyPlanner();
-            initStudyBuddyChat();
-
+            initTaskManager(courseList);
         });
 
-        // --- INITIALIZATION FUNCTIONS ---
+        // --- FUNCTIONS ---
         function initThemeToggler() {
             const themeToggle = document.getElementById('theme-toggle');
             const sunIcon = document.getElementById('theme-toggle-sun');
@@ -171,7 +241,6 @@
                 sunIcon.classList.toggle('hidden', theme === 'dark');
                 moonIcon.classList.toggle('hidden', theme === 'light');
                 localStorage.setItem('theme', theme);
-                // Force chart legend redraw
                 if(window.sksChart && window.sksChart.options) {
                     window.sksChart.options.plugins.legend.labels.color = theme === 'dark' ? '#FFF' : '#333';
                     window.sksChart.update();
@@ -254,23 +323,26 @@
             document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
         }
 
-        function initTaskManager() {
+        function initTaskManager(courseList) {
             const taskForm = document.getElementById('taskForm');
             const taskInput = document.getElementById('taskInput');
             const courseSelect = document.getElementById('courseSelect');
             const deadlineInput = document.getElementById('deadlineInput');
             const taskListEl = document.getElementById('taskList');
-            const aiBreakdownBtn = document.getElementById('ai-breakdown-btn');
             
-            populateSelect(courseSelect, courseList);
+            courseList.forEach(course => {
+                const option = document.createElement('option');
+                option.textContent = course;
+                courseSelect.appendChild(option);
+            });
 
-            let tasks = JSON.parse(localStorage.getItem('tasks_international_v3')) || [];
-            const saveTasks = () => localStorage.setItem('tasks_international_v3', JSON.stringify(tasks));
+            let tasks = JSON.parse(localStorage.getItem('tasks_international_v2')) || [];
+            const saveTasks = () => localStorage.setItem('tasks_international_v2', JSON.stringify(tasks));
 
             const renderTasks = () => {
                 taskListEl.innerHTML = '';
                 if (tasks.length === 0) {
-                    taskListEl.innerHTML = `<p class="text-center text-gray-500 dark:text-gray-400 py-4">Hore, tidak ada tugas!</p>`;
+                    taskListEl.innerHTML = `<p class="text-center text-gray-500 dark:text-gray-400 py-4">Hore, tidak ada tugas! Saatnya santai sejenak.</p>`;
                     return;
                 }
                 tasks.sort((a,b) => (a.deadline && b.deadline) ? new Date(a.deadline) - new Date(b.deadline) : a.deadline ? -1 : 1);
@@ -292,45 +364,9 @@
                 if (text) {
                     tasks.push({ text, course: courseSelect.value, deadline: deadlineInput.value });
                     taskInput.value = '';
+                    deadlineInput.value = '';
                     saveTasks(); renderTasks();
                 }
-            });
-
-            aiBreakdownBtn.addEventListener('click', async () => {
-                const mainTask = taskInput.value.trim();
-                if (!mainTask) { alert("Tulis dulu tugas utamanya!"); return; }
-
-                aiBreakdownBtn.disabled = true;
-                aiBreakdownBtn.innerHTML = `<div class="w-5 h-5 border-t-2 border-yellow-900 rounded-full animate-spin"></div>`;
-
-                const payload = {
-                    contents: [{ parts: [{ text: `Pecah tugas utama ini menjadi beberapa sub-tugas yang lebih kecil dan bisa dikerjakan dalam bahasa Indonesia: "${mainTask}"` }] }],
-                    generationConfig: {
-                        responseMimeType: "application/json",
-                        responseSchema: {
-                            type: "ARRAY",
-                            items: {
-                                type: "OBJECT",
-                                properties: { "subtask": { "type": "STRING" } },
-                            }
-                        }
-                    }
-                };
-
-                const result = await callGeminiAPI(payload);
-                if (result?.candidates?.[0]?.content?.parts?.[0]?.text) {
-                    const subtasks = JSON.parse(result.candidates[0].content.parts[0].text);
-                    subtasks.forEach(item => {
-                        tasks.push({ text: `[SUB] ${item.subtask}`, course: courseSelect.value, deadline: deadlineInput.value });
-                    });
-                    taskInput.value = '';
-                    saveTasks(); renderTasks();
-                } else {
-                    alert("Gagal memecah tugas. Coba lagi.");
-                }
-
-                aiBreakdownBtn.disabled = false;
-                aiBreakdownBtn.innerHTML = '✨';
             });
 
             taskListEl.addEventListener('click', (e) => {
@@ -356,103 +392,6 @@
                 }
             };
             window.sksChart = new Chart(document.getElementById('sksChart'), config);
-        }
-
-        function initStudyPlanner() {
-            const courseSelect = document.getElementById('study-course-select');
-            const timeframeSelect = document.getElementById('study-timeframe-select');
-            const generateBtn = document.getElementById('generate-plan-btn');
-            const resultDiv = document.getElementById('study-plan-result');
-
-            populateSelect(courseSelect, courseList.filter(c => c !== 'Lainnya'));
-
-            generateBtn.addEventListener('click', async () => {
-                const course = courseSelect.value;
-                const timeframe = timeframeSelect.value;
-                
-                generateBtn.disabled = true;
-                resultDiv.innerHTML = `<div class="flex justify-center items-center"><div class="w-8 h-8 border-t-2 border-cyan-600 rounded-full animate-spin"></div><p class="ml-2">AI sedang menyusun rencana...</p></div>`;
-
-                const systemPrompt = "Kamu adalah seorang tutor akademik AI yang ahli membuat rencana belajar efektif dan terstruktur untuk mahasiswa. Buatlah rencana belajar harian yang jelas, dengan poin-poin spesifik untuk setiap hari. Gunakan format markdown.";
-                const userPrompt = `Buatkan saya rencana belajar harian selama ${timeframe} untuk mata kuliah "${course}". Fokus pada topik-topik paling penting untuk persiapan ujian.`;
-                
-                const payload = {
-                    contents: [{ parts: [{ text: userPrompt }] }],
-                    systemInstruction: { parts: [{ text: systemPrompt }] }
-                };
-
-                const result = await callGeminiAPI(payload);
-                if (result?.candidates?.[0]?.content?.parts?.[0]?.text) {
-                    resultDiv.innerHTML = marked.parse(result.candidates[0].content.parts[0].text);
-                } else {
-                    resultDiv.innerHTML = `<p class="text-red-500">Gagal membuat rencana. Coba lagi nanti.</p>`;
-                }
-                generateBtn.disabled = false;
-            });
-        }
-        
-        function initStudyBuddyChat() {
-            const chatBubble = document.getElementById('chat-bubble');
-            const chatWidget = document.getElementById('chat-widget');
-            const closeChatBtn = document.getElementById('close-chat');
-            const chatBox = document.getElementById('chat-box');
-            const chatForm = document.getElementById('chat-form');
-            const chatInput = document.getElementById('chat-input');
-            let chatHistory = [];
-
-            const toggleChat = (isOpen) => {
-                if (isOpen) {
-                    chatWidget.classList.remove('scale-95', 'opacity-0', 'pointer-events-none');
-                    chatWidget.classList.add('scale-100', 'opacity-100');
-                } else {
-                    chatWidget.classList.add('scale-95', 'opacity-0');
-                    setTimeout(() => chatWidget.classList.add('pointer-events-none'), 300);
-                }
-            };
-            
-            chatBubble.addEventListener('click', () => toggleChat(true));
-            closeChatBtn.addEventListener('click', () => toggleChat(false));
-
-            const addMessage = (sender, message) => {
-                const messageEl = document.createElement('div');
-                messageEl.className = `message-bubble p-3 rounded-lg ${sender === 'user' ? 'user self-end' : 'bot self-start'}`;
-                messageEl.innerHTML = marked.parse(message);
-                chatBox.appendChild(messageEl);
-                chatBox.scrollTop = chatBox.scrollHeight;
-            };
-
-            chatForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const userMessage = chatInput.value.trim();
-                if (!userMessage) return;
-
-                addMessage('user', userMessage);
-                chatInput.value = '';
-                
-                const typingIndicator = document.createElement('div');
-                typingIndicator.className = 'message-bubble bot self-start p-3 rounded-lg typing-indicator';
-                typingIndicator.innerHTML = '<span></span><span></span><span></span>';
-                chatBox.appendChild(typingIndicator);
-                chatBox.scrollTop = chatBox.scrollHeight;
-
-                const systemPrompt = "Kamu adalah 'Study Buddy', asisten AI yang ramah dan sangat membantu untuk seorang mahasiswa teknik informatika bernama Fadly. Jawab pertanyaan dengan jelas, informatif, dan dengan gaya bahasa yang bersahabat. Jika relevan, berikan contoh kode dalam blok markdown.";
-                const payload = {
-                    contents: [...chatHistory, { role: "user", parts: [{ text: userMessage }] }],
-                    systemInstruction: { parts: [{ text: systemPrompt }] }
-                };
-                
-                const result = await callGeminiAPI(payload);
-                chatBox.removeChild(typingIndicator);
-                
-                if (result?.candidates?.[0]?.content?.parts?.[0]?.text) {
-                    const botMessage = result.candidates[0].content.parts[0].text;
-                    addMessage('bot', botMessage);
-                    chatHistory.push({ role: "user", parts: [{ text: userMessage }] });
-                    chatHistory.push({ role: "model", parts: [{ text: botMessage }] });
-                } else {
-                    addMessage('bot', 'Maaf, sepertinya ada masalah. Coba tanya lagi ya.');
-                }
-            });
         }
     </script>
 </body>
