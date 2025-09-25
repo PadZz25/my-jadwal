@@ -141,16 +141,18 @@
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, onSnapshot, setDoc, collection, addDoc, deleteDoc, query, orderBy, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
+        // --- KUNCI RAHASIA SUDAH TERPASANG ---
         const firebaseConfig = {
-            apiKey: "AIzaSyCsDdPcEKqzFd2RjMeNZ2StNt572jtf9ts",
-            authDomain: "dashboard-fadly.firebaseapp.com",
-            projectId: "dashboard-fadly",
-            storageBucket: "dashboard-fadly.firebasestorage.app",
-            messagingSenderId: "962523672113",
-            appId: "1:962523672113:web:37b6de93228e382f2eaf10",
-            measurementId: "G-8P7RTYTPKD"
+            apiKey: "AIzaSyCsDdPcEKqzFd2RjMeNZ2StNt572jtf9ts",
+            authDomain: "dashboard-fadly.firebaseapp.com",
+            projectId: "dashboard-fadly",
+            storageBucket: "dashboard-fadly.firebasestorage.app",
+            messagingSenderId: "962523672113",
+            appId: "1:962523672113:web:37b6de93228e382f2eaf10",
+            measurementId: "G-8P7RTYTPKD"
         };
-        
+        // --- SINKRONISASI AKTIF ---
+
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
@@ -383,7 +385,6 @@
             const config = { type: 'doughnut', data: data, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { font: { size: 12, weight: '600'}, padding: 15, usePointStyle: true, pointStyle: 'rectRounded' }}, tooltip: { enabled: true, backgroundColor: '#073B4C', titleFont: { size: 16, weight: 'bold' }, bodyFont: { size: 14 }, padding: 12, cornerRadius: 8, callbacks: { title: (ctx) => ctx[0].label } } } } };
             window.sksChart = new Chart(document.getElementById('sksChart'), config);
         }
-        
     </script>
 </body>
 </html>
