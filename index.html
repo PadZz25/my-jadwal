@@ -137,12 +137,10 @@
     <audio id="task-complete-sound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_1b75c913a3.mp3"></audio>
 
     <script type="module">
-        // --- Firebase SDK Imports ---
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, onSnapshot, setDoc, collection, addDoc, deleteDoc, query, orderBy, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // --- KUNCI RAHASIA SUDAH TERPASANG ---
         const firebaseConfig = {
             apiKey: "AIzaSyCsDdPcEKqzFd2RjMeNZ2StNt572jtf9ts",
             authDomain: "dashboard-fadly.firebaseapp.com",
@@ -152,50 +150,24 @@
             appId: "1:962523672113:web:37b6de93228e382f2eaf10",
             measurementId: "G-8P7RTYTPKD"
         };
-        // --- SINKRONISASI AKTIF ---
-
+        
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-
-        // Global variables for data
         let tasks = [], goals = [], profile = {}, resources = [];
         let unsubscribeTasks, unsubscribeGoals, unsubscribeProfile, unsubscribeResources;
+        let taskCountdownInterval;
 
         document.addEventListener('DOMContentLoaded', () => {
             const courseList = ['Programming and Algorithm','Computer Architecture','Intro to IT','Computer Mathematics 1','Islamic Religion','English for Professional Purposes','Occupational Health and Safety','Lainnya'];
-            
-            initSKSChart();
-            initThemeToggler();
-            initDynamicGreeting();
-            initCountdownTimer();
-            initScrollReveal();
-            initTaskManager(courseList);
-            initQuoteOfTheDay();
-            renderScheduleGrid();
-            initFocusMode();
-            initGoalTracker();
-            initProfile();
-            initResourceHub();
-            initCommandPalette();
-
-            onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    setupRealtimeListeners(user.uid);
-                } else {
-                    signInAnonymously(auth).catch(error => console.error("Anonymous sign-in failed:", error));
-                }
-            });
+            initSKSChart(); initThemeToggler(); initDynamicGreeting(); initCountdownTimer(); initScrollReveal(); initTaskManager(courseList); initQuoteOfTheDay(); renderScheduleGrid(); initFocusMode(); initGoalTracker(); initProfile(); initResourceHub(); initCommandPalette();
+            onAuthStateChanged(auth, (user) => { if (user) { setupRealtimeListeners(user.uid); } else { signInAnonymously(auth).catch(error => console.error("Anonymous sign-in failed:", error)); } });
         });
         
         function setupRealtimeListeners(userId) {
             if(unsubscribeTasks) unsubscribeTasks(); if(unsubscribeGoals) unsubscribeGoals(); if(unsubscribeProfile) unsubscribeProfile(); if(unsubscribeResources) unsubscribeResources();
             const profileRef = doc(db, 'users', userId);
-            unsubscribeProfile = onSnapshot(profileRef, (docSnap) => {
-                profile = docSnap.exists() ? docSnap.data() : { name: "Fadly M.Z.", avatarUrl: "", gpaTarget: 3.8, stats: { completed: 0, streak: 0, lastCompletion: null } };
-                renderProfile();
-                renderProfileStats();
-            });
+            unsubscribeProfile = onSnapshot(profileRef, (docSnap) => { profile = docSnap.exists() ? docSnap.data() : { name: "Fadly M.Z.", avatarUrl: "", gpaTarget: 3.8, stats: { completed: 0, streak: 0, lastCompletion: null } }; renderProfile(); renderProfileStats(); });
             const tasksRef = collection(db, 'users', userId, 'tasks');
             const tasksQuery = query(tasksRef, orderBy('order', 'asc'));
             unsubscribeTasks = onSnapshot(tasksQuery, (snapshot) => { tasks = snapshot.docs.map(doc => ({ ...doc.data(), firestoreId: doc.id })); renderTasks(); });
@@ -207,28 +179,20 @@
         
         function initThemeToggler() {
             const themeToggle = document.getElementById('theme-toggle'), sunIcon = document.getElementById('theme-toggle-sun'), moonIcon = document.getElementById('theme-toggle-moon'), html = document.documentElement;
-            const applyTheme = (theme) => {
-                html.className = theme;
-                sunIcon.classList.toggle('hidden', theme === 'dark'); moonIcon.classList.toggle('hidden', theme === 'light');
-                localStorage.setItem('theme', theme);
-                if(window.sksChart && window.sksChart.options) { window.sksChart.options.plugins.legend.labels.color = theme === 'dark' ? '#FFF' : '#333'; window.sksChart.update(); }
-            };
+            const applyTheme = (theme) => { html.className = theme; sunIcon.classList.toggle('hidden', theme === 'dark'); moonIcon.classList.toggle('hidden', theme === 'light'); localStorage.setItem('theme', theme); if(window.sksChart && window.sksChart.options) { window.sksChart.options.plugins.legend.labels.color = theme === 'dark' ? '#FFF' : '#333'; window.sksChart.update(); } };
             themeToggle.addEventListener('click', () => applyTheme(html.classList.contains('dark') ? 'light' : 'dark'));
             applyTheme(localStorage.getItem('theme') || 'light');
         }
-
         function initDynamicGreeting() {
             const greetingEl = document.getElementById('greeting'), hour = new Date().getHours();
             if (hour < 11) greetingEl.textContent = 'Selamat Pagi!'; else if (hour < 15) greetingEl.textContent = 'Selamat Siang!'; else if (hour < 19) greetingEl.textContent = 'Selamat Sore!'; else greetingEl.textContent = 'Selamat Malam!';
         }
-
         function initCountdownTimer() {
             const schedule = [ { day: 1, start: "07:00", name: "Programming and Algorithm" }, { day: 1, start: "10:30", name: "English for Professional Purposes" }, { day: 2, start: "07:00", name: "Computer Architecture" }, { day: 2, start: "09:35", name: "Intro to IT" }, { day: 3, start: "09:35", name: "Computer Mathematics 1" }, { day: 3, start: "14:55", name: "Islamic Religion" }, { day: 5, start: "07:00", name: "Occupational Health and Safety" }, { day: 6, start: "07:00", name: "Islamic Religion" }, ];
             const findNextClass = () => { const now = new Date(); for (let i = 0; i < 7; i++) { const checkDay = (now.getDay() + i) % 7; const dayClasses = schedule.filter(c => c.day === checkDay).sort((a, b) => parseInt(a.start.replace(':', '')) - parseInt(b.start.replace(':', ''))); for (const cls of dayClasses) { const [h, m] = cls.start.split(':'); const classTime = new Date(now); classTime.setDate(now.getDate() + i); classTime.setHours(h, m, 0, 0); if (classTime > now) return { ...cls, date: classTime }; } } return null; };
             const updateCountdown = () => { const countdownTimerEl = document.getElementById('countdown-timer'), nextClassInfoEl = document.getElementById('next-class-info'), nextClass = findNextClass(); if (!nextClass) { countdownTimerEl.textContent = "HORE!"; nextClassInfoEl.textContent = "Tidak ada kelas lagi minggu ini!"; return; } const diff = nextClass.date - new Date(); if (diff <= 0) { setTimeout(updateCountdown, 1000); return; } const d = Math.floor(diff / (1000*60*60*24)), h = Math.floor((diff % (1000*60*60*24)) / (1000*60*60)), m = Math.floor((diff % (1000*60*60)) / (1000*60)), s = Math.floor((diff % (1000*60)) / 1000); countdownTimerEl.textContent = d > 0 ? `${d} Hari ${h} Jam` : `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`; const dayName = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'][nextClass.date.getDay()]; nextClassInfoEl.textContent = `${nextClass.name} - ${dayName}, ${nextClass.start}`; };
             setInterval(updateCountdown, 1000); updateCountdown();
         }
-        
         function initQuoteOfTheDay() {
             const quoteTextEl = document.getElementById('quote-text');
             const quotes = [ "Satu-satunya cara untuk melakukan pekerjaan hebat adalah dengan mencintai apa yang kamu lakukan.", "Pendidikan adalah senjata paling ampuh yang bisa kamu gunakan untuk mengubah dunia.", "Jangan berhenti ketika lelah. Berhentilah ketika selesai.", "Mimpi tidak menjadi kenyataan melalui sihir; butuh keringat, tekad, dan kerja keras.", "Percayalah pada dirimu sendiri dan semua yang kamu miliki." ];
@@ -236,81 +200,50 @@
             const typeWriter = () => { if (i < quote.length) { quoteTextEl.innerHTML += quote.charAt(i); i++; setTimeout(typeWriter, 50); } };
             typeWriter();
         }
-
         function initScrollReveal() {
             const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); }); }, { threshold: 0.1 });
             document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
         }
-        
         function initTaskManager(courseList) {
             const taskForm = document.getElementById('taskForm'), taskInput = document.getElementById('taskInput'), courseSelect = document.getElementById('courseSelect'), deadlineInput = document.getElementById('deadlineInput'), taskListEl = document.getElementById('taskList');
             courseList.forEach(course => { const option = document.createElement('option'); option.textContent = course; courseSelect.appendChild(option); });
-            
             taskInput.addEventListener('paste', async e => { const pastedText = (e.clipboardData || window.clipboardData).getData('text'); if (pastedText.startsWith('http')) { e.preventDefault(); await addTask(pastedText, true); } });
             taskForm.addEventListener('submit', async (e) => { e.preventDefault(); await addTask(taskInput.value.trim()); });
-
-            const addTask = async (text, isUrl = false) => {
-                if (!text || !auth.currentUser) return;
-                const newTask = { text, course: courseSelect.value, deadline: deadlineInput.value, id: Date.now(), isUrl, order: tasks.length };
-                taskInput.value = ''; deadlineInput.value = '';
-                const docRef = await addDoc(collection(db, 'users', auth.currentUser.uid, 'tasks'), newTask);
-                if (isUrl) await fetchLinkPreview(docRef.id, text);
-            };
-
+            const addTask = async (text, isUrl = false) => { if (!text || !auth.currentUser) return; const newTask = { text, course: courseSelect.value, deadline: deadlineInput.value, id: Date.now(), isUrl, order: tasks.length }; taskInput.value = ''; deadlineInput.value = ''; const docRef = await addDoc(collection(db, 'users', auth.currentUser.uid, 'tasks'), newTask); if (isUrl) await fetchLinkPreview(docRef.id, text); };
             taskListEl.addEventListener('dragover', e => { e.preventDefault(); const draggable = document.querySelector('.dragging'); if (!draggable) return; const afterElement = getDragAfterElement(taskListEl, e.clientY); if (afterElement == null) taskListEl.appendChild(draggable); else taskListEl.insertBefore(draggable, afterElement); });
-            taskListEl.addEventListener('drop', async () => { 
-                const newOrderedIds = Array.from(taskListEl.querySelectorAll('.task-item')).map(item => item.dataset.firestoreId);
-                for(let i=0; i < newOrderedIds.length; i++){
-                    const taskRef = doc(db, 'users', auth.currentUser.uid, 'tasks', newOrderedIds[i]);
-                    await updateDoc(taskRef, { order: i });
-                }
-            });
+            taskListEl.addEventListener('drop', async () => { const newOrderedIds = Array.from(taskListEl.querySelectorAll('.task-item')).map(item => item.dataset.firestoreId); for(let i=0; i < newOrderedIds.length; i++){ const taskRef = doc(db, 'users', auth.currentUser.uid, 'tasks', newOrderedIds[i]); await updateDoc(taskRef, { order: i }); } });
             taskListEl.addEventListener('click', async (e) => {
                 const deleteBtn = e.target.closest('.delete-btn');
                 if (deleteBtn) {
-                    const itemToRemove = e.target.closest('.task-item');
-                    const firestoreId = itemToRemove.dataset.firestoreId;
+                    const itemToRemove = e.target.closest('.task-item'); const firestoreId = itemToRemove.dataset.firestoreId;
                     await deleteDoc(doc(db, 'users', auth.currentUser.uid, 'tasks', firestoreId));
                     await updateStatsOnTaskComplete();
                     itemToRemove.style.transition = 'opacity 0.3s ease, transform 0.3s ease'; itemToRemove.style.opacity = '0'; itemToRemove.style.transform = 'translateX(100px)';
-                    document.getElementById('task-complete-sound').play();
-                    confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                    document.getElementById('task-complete-sound').play(); confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
                 }
                 if (e.target.closest('.focus-btn')) { const id = e.target.closest('.task-item').dataset.id; const task = tasks.find(t => t.id == id); startFocusMode(task.text); }
             });
             startTaskCountdown();
         }
-
         async function updateStatsOnTaskComplete() {
             if (!auth.currentUser) return;
             const statsRef = doc(db, 'users', auth.currentUser.uid);
             const today = new Date().toISOString().slice(0, 10);
-            
             let currentStats = profile.stats || { completed: 0, streak: 0, lastCompletion: null };
             currentStats.completed++;
-
-            if (currentStats.lastCompletion !== today) {
-                const lastDate = currentStats.lastCompletion ? new Date(currentStats.lastCompletion) : new Date(0);
-                const todayDate = new Date(today);
-                const diffDays = (todayDate - lastDate) / (1000 * 60 * 60 * 24);
-                currentStats.streak = diffDays === 1 ? (currentStats.streak || 0) + 1 : 1;
-            }
+            if (currentStats.lastCompletion !== today) { const lastDate = currentStats.lastCompletion ? new Date(currentStats.lastCompletion) : new Date(0); const todayDate = new Date(today); const diffDays = (todayDate - lastDate) / (1000 * 60 * 60 * 24); currentStats.streak = diffDays === 1 ? (currentStats.streak || 0) + 1 : 1; }
             currentStats.lastCompletion = today;
             await setDoc(statsRef, { stats: currentStats }, { merge: true });
         }
-
         async function fetchLinkPreview(firestoreId, url) {
             try {
                 const response = await fetch(`https://jsonlink.io/api/extract?url=${encodeURIComponent(url)}`);
                 if (!response.ok) throw new Error('Network response was not ok');
                 const data = await response.json();
                 const taskRef = doc(db, 'users', auth.currentUser.uid, 'tasks', firestoreId);
-                await updateDoc(taskRef, {
-                    preview: { title: data.title || "No Title", description: data.description || "", image: data.images[0] || "" }
-                });
+                await updateDoc(taskRef, { preview: { title: data.title || "No Title", description: data.description || "", image: data.images[0] || "" } });
             } catch (error) { console.error('Link preview error:', error); }
         }
-
         function renderTasks() {
             const taskListEl = document.getElementById('taskList'); taskListEl.innerHTML = '';
             if (tasks.length === 0) { taskListEl.innerHTML = `<p class="text-center text-gray-500 dark:text-gray-400 py-4">Hore, tidak ada tugas!</p>`; return; }
@@ -321,43 +254,25 @@
                 item.addEventListener('dragstart', () => item.classList.add('dragging')); item.addEventListener('dragend', () => item.classList.remove('dragging'));
                 const deadline = task.deadline ? new Date(task.deadline) : null; const totalDuration = deadline ? (deadline - new Date(task.id)) : 0; const remainingTime = deadline ? (deadline - new Date()) : -1;
                 let progressColor = 'bg-gray-400';
-                if(deadline) {
-                    const timeRemainingRatio = remainingTime / totalDuration;
-                    if (timeRemainingRatio > 0.5) progressColor = 'bg-green-500'; else if (timeRemainingRatio > 0.2) progressColor = 'bg-yellow-500'; else progressColor = 'bg-red-500';
-                }
+                if(deadline) { const timeRemainingRatio = remainingTime / totalDuration; if (timeRemainingRatio > 0.5) progressColor = 'bg-green-500'; else if (timeRemainingRatio > 0.2) progressColor = 'bg-yellow-500'; else progressColor = 'bg-red-500'; }
                 let previewHtml = '';
-                if (task.isUrl) {
-                    if (task.preview) {
-                        previewHtml = `<a href="${task.text}" target="_blank" class="link-preview mt-3 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg flex gap-4 items-center card-hover"><img src="${task.preview.image}" onerror="this.style.display='none'" class="w-20 h-20 object-cover rounded-md"><div class="flex-1"><h4 class="font-bold">${task.preview.title}</h4><p class="text-xs text-gray-500 dark:text-gray-400">${(task.preview.description || "").substring(0, 100)}...</p></div></a>`;
-                    } else {
-                        previewHtml = `<div class="mt-3 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg text-sm">Memuat pratinjau...</div>`;
-                    }
-                }
-                item.innerHTML = `
-                    <div class="flex items-start justify-between"><div><p class="font-semibold">${task.isUrl ? (task.preview?.title || task.text) : task.text}</p><span class="text-xs font-bold px-2 py-1 rounded-full bg-gray-200 dark:bg-gray-600">${task.course}</span></div><div class="task-actions flex items-center space-x-2"><button class="focus-btn p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600" title="Mode Fokus"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg></button><button class="delete-btn p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600" title="Selesai"><svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></button></div></div>
-                    ${previewHtml}
-                    ${deadline ? `<div class="mt-3"><div class="flex justify-between text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1"><span>Deadline</span><span id="countdown-${task.id}">Menghitung...</span></div><div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2.5"><div class="${progressColor}" style="height:100%; width: ${100 - Math.max(0, Math.min(100, (remainingTime / totalDuration) * 100))}%; border-radius: inherit;"></div></div></div>` : ''}`;
+                if (task.isUrl) { if (task.preview) { previewHtml = `<a href="${task.text}" target="_blank" class="link-preview mt-3 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg flex gap-4 items-center card-hover"><img src="${task.preview.image}" onerror="this.style.display='none'" class="w-20 h-20 object-cover rounded-md"><div class="flex-1"><h4 class="font-bold">${task.preview.title}</h4><p class="text-xs text-gray-500 dark:text-gray-400">${(task.preview.description || "").substring(0, 100)}...</p></div></a>`; } else { previewHtml = `<div class="mt-3 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg text-sm">Memuat pratinjau...</div>`; } }
+                item.innerHTML = `<div class="flex items-start justify-between"><div><p class="font-semibold">${task.isUrl ? (task.preview?.title || task.text) : task.text}</p><span class="text-xs font-bold px-2 py-1 rounded-full bg-gray-200 dark:bg-gray-600">${task.course}</span></div><div class="task-actions flex items-center space-x-2"><button class="focus-btn p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600" title="Mode Fokus"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg></button><button class="delete-btn p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600" title="Selesai"><svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></button></div></div>${previewHtml}${deadline ? `<div class="mt-3"><div class="flex justify-between text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1"><span>Deadline</span><span id="countdown-${task.id}">Menghitung...</span></div><div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2.5"><div class="${progressColor}" style="height:100%; width: ${100 - Math.max(0, Math.min(100, (remainingTime / totalDuration) * 100))}%; border-radius: inherit;"></div></div></div>` : ''}`;
                 taskListEl.appendChild(item);
             });
         }
-
         function startTaskCountdown() {
             if (taskCountdownInterval) clearInterval(taskCountdownInterval);
             taskCountdownInterval = setInterval(() => {
                 tasks.forEach(task => {
                     if (task.deadline) {
                         const countdownEl = document.getElementById(`countdown-${task.id}`);
-                        if (countdownEl) {
-                            const diff = new Date(task.deadline) - new Date();
-                            if (diff > 0) { const d = Math.floor(diff / (1000*60*60*24)), h = Math.floor((diff % (1000*60*60*24)) / (1000*60*60)), m = Math.floor((diff % (1000*60*60)) / (1000*60)); countdownEl.textContent = `${d}h ${h}j ${m}m lagi`; } else { countdownEl.textContent = 'DEADLINE LEWAT!'; countdownEl.classList.add('text-red-500', 'font-bold'); }
-                        }
+                        if (countdownEl) { const diff = new Date(task.deadline) - new Date(); if (diff > 0) { const d = Math.floor(diff / (1000*60*60*24)), h = Math.floor((diff % (1000*60*60*24)) / (1000*60*60)), m = Math.floor((diff % (1000*60*60)) / (1000*60)); countdownEl.textContent = `${d}h ${h}j ${m}m lagi`; } else { countdownEl.textContent = 'DEADLINE LEWAT!'; countdownEl.classList.add('text-red-500', 'font-bold'); } }
                     }
                 });
             }, 60000);
         }
-        
         function getDragAfterElement(container, y) { const draggableElements = [...container.querySelectorAll('.task-item:not(.dragging)')]; return draggableElements.reduce((closest, child) => { const box = child.getBoundingClientRect(); const offset = y - box.top - box.height / 2; if (offset < 0 && offset > closest.offset) { return { offset: offset, element: child }; } else { return closest; } }, { offset: Number.NEGATIVE_INFINITY }).element; }
-
         function initFocusMode() {
             const modal = document.getElementById('focus-modal'), taskNameEl = document.getElementById('focus-task-name'), timerEl = document.getElementById('pomodoro-timer'), statusEl = document.getElementById('pomodoro-status'), startBtn = document.getElementById('pomodoro-start'), pauseBtn = document.getElementById('pomodoro-pause'), closeBtn = document.getElementById('pomodoro-close');
             let timerInterval, totalSeconds = 25 * 60, isPaused = true, isWorkSession = true;
@@ -367,13 +282,11 @@
             window.startFocusMode = (taskName) => { taskNameEl.textContent = taskName; totalSeconds = 25 * 60; isWorkSession = true; isPaused = true; statusEl.textContent = 'Waktunya Fokus!'; updateTimerDisplay(); modal.classList.remove('hidden'); modal.classList.add('flex'); };
             startBtn.addEventListener('click', startTimer); pauseBtn.addEventListener('click', pauseTimer); closeBtn.addEventListener('click', closeFocusMode);
         }
-
         function renderScheduleGrid() {
             const gridEl = document.getElementById('schedule-grid'); gridEl.innerHTML = ''; const days = ['SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT', 'SABTU', 'MINGGU'];
             const scheduleData = { SENIN: [ { time: '07.00 - 10.25', jam: '1-4', title: 'Programming and Algorithm', lecturer: 'Muhammad Jauharul Fuady', room: 'B11-414', color: 'border-red-500' }, { time: '10.30 - 12.10', jam: '5-6', title: 'English for Professional Purposes', lecturer: 'Muhammad Iqbal Akbar', room: 'A20-211', color: 'border-yellow-500' } ], SELASA: [ { time: '07.00 - 09.35', jam: '1-3', title: 'Organization and Computer Architecture', lecturer: 'Muhammad Ashar', room: 'B12-205', color: 'border-green-500' }, { time: '09.35 - 12.10', jam: '4-6', title: 'Introduction to Information Technology', lecturer: 'Heni Vidia Sari', room: 'A19-405', color: 'border-blue-500' } ], RABU: [ { time: '09.35 - 12.10', jam: '4-6', title: 'Computer Mathematics 1', lecturer: 'Muhammad Iqbal Akbar', room: 'A20-208', color: 'border-blue-500' }, { break: true, time: '12.10 - 14.55' }, { time: '14.55 - 16.35', jam: '9-10', title: 'Islamic Religion Education', lecturer: 'Muhammad Alfan', room: 'A19-710', color: 'border-indigo-500' } ], KAMIS: [], JUMAT: [{ time: '07.00 - 08.40', jam: '1-2', title: 'Occupational Health and Safety', lecturer: 'Muis Muhtadi', room: 'B12-113', color: 'border-pink-500' }], SABTU: [{ time: '07.00 - 10.25', jam: '1-4', title: 'Islamic Religion Education', lecturer: 'Muhammad Alfan', room: 'F2.1', color: 'border-indigo-500' }], MINGGU: [] };
             days.forEach(day => { const dayClasses = scheduleData[day]; let content = ''; if(dayClasses.length === 0) { const icon = day === 'KAMIS' ? '😴' : '🎉'; content = `<div class="bg-gray-200 dark:bg-gray-800/50 border-t-4 border-gray-400 rounded-lg shadow-md p-6 flex flex-col items-center justify-center h-full mt-6 card-hover"><div class="text-6xl mb-4">${icon}</div><h4 class="font-bold text-2xl">${day === 'MINGGU' ? 'Akhir Pekan!' : 'Hari Kosong'}</h4></div>`; } else { dayClasses.forEach(c => { if (c.break) { content += `<div class="bg-green-100 dark:bg-green-900/50 p-4 rounded-lg shadow-md border-t-4 border-green-500 text-center card-hover"><p class="font-bold text-gray-500 dark:text-gray-400 text-sm">${c.time}</p><h4 class="font-bold text-lg text-green-800 dark:text-green-300">☕ JEDA PANJANG ☕</h4></div>`; } else { content += `<div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border-t-4 ${c.color} card-hover"><p class="font-bold text-gray-500 dark:text-gray-400 text-sm">${c.time}</p><p class="font-semibold text-gray-500 dark:text-gray-400 text-xs mt-1">🕒 Jam ke-${c.jam}</p><h4 class="font-bold text-lg mt-2">${c.title}</h4><p class="text-gray-600 dark:text-gray-300 text-sm">${c.lecturer}</p><p class="font-semibold mt-2 text-sm">📍 ${c.room}</p></div>`; } }); } gridEl.innerHTML += `<div class="flex flex-col space-y-6"><h3 class="text-2xl font-bold text-center ${dayClasses.length === 0 ? 'bg-gray-600' : 'bg-[#073B4C] dark:bg-gray-700'} text-white py-2 rounded-lg shadow-md">${day}</h3>${content}</div>`; });
         }
-        
         function initGoalTracker() {
             const goalListEl = document.getElementById('goal-list'), goalInput = document.getElementById('goal-input'), goalTotalInput = document.getElementById('goal-total'), addGoalBtn = document.getElementById('add-goal-btn');
             window.renderGoals = () => {
@@ -396,18 +309,15 @@
                 if (shouldUpdate) { const goalRef = doc(db, 'users', auth.currentUser.uid, 'goals', id); await updateDoc(goalRef, { current: goal.current }); } 
             });
         }
-        
         function initProfile() {
             const profileButton = document.getElementById('profile-button'), profileModal = document.getElementById('profile-modal'), closeBtn = document.getElementById('profile-close-btn'), saveBtn = document.getElementById('profile-save-btn');
             const avatar = document.getElementById('profile-avatar'), initials = document.getElementById('profile-initials'), modalAvatar = document.getElementById('profile-modal-avatar');
             const nameInput = document.getElementById('profile-name-input'), avatarUrlInput = document.getElementById('profile-avatar-url-input'), gpaInput = document.getElementById('profile-gpa-input');
-            
             window.renderProfile = () => {
                 const name = profile.name || "Fadly M.Z.";
                 nameInput.value = name;
                 avatarUrlInput.value = profile.avatarUrl;
                 gpaInput.value = profile.gpaTarget;
-
                 if (profile.avatarUrl) {
                     avatar.src = profile.avatarUrl; modalAvatar.src = profile.avatarUrl;
                     avatar.classList.remove('hidden'); modalAvatar.classList.remove('hidden'); initials.classList.add('hidden');
@@ -416,7 +326,6 @@
                     initials.textContent = name.split(" ").map(n => n[0]).join("").substring(0,2).toUpperCase();
                 }
             };
-            
             profileButton.addEventListener('click', () => { profileModal.classList.remove('hidden'); profileModal.classList.add('flex'); });
             closeBtn.addEventListener('click', () => { profileModal.classList.add('hidden'); profileModal.classList.remove('flex'); });
             saveBtn.addEventListener('click', async () => {
@@ -430,13 +339,11 @@
                 profileModal.classList.add('hidden'); profileModal.classList.remove('flex');
             });
         }
-        
         function renderProfileStats() {
              const stats = profile.stats || { completed: 0, streak: 0 };
              document.getElementById('stats-tasks-completed').textContent = stats.completed;
              document.getElementById('stats-productivity-streak').textContent = `${stats.streak} 🔥`;
         }
-
         function initResourceHub() {
             const resourceListEl = document.getElementById('resource-list'), nameInput = document.getElementById('resource-name-input'), urlInput = document.getElementById('resource-url-input'), addBtn = document.getElementById('add-resource-btn');
             window.renderResources = () => {
@@ -454,7 +361,6 @@
             addBtn.addEventListener('click', async () => { const name = nameInput.value.trim(), url = urlInput.value.trim(); if(name && url && auth.currentUser) { await addDoc(collection(db, 'users', auth.currentUser.uid, 'resources'), {name, url}); nameInput.value = ''; urlInput.value = ''; } });
             resourceListEl.addEventListener('click', async e => { if(e.target.classList.contains('resource-delete-btn')) { e.preventDefault(); const id = e.target.dataset.id; await deleteDoc(doc(db, 'users', auth.currentUser.uid, 'resources', id)); } });
         }
-
         function initCommandPalette() {
             const modal = document.getElementById('cmd-palette-modal'), input = document.getElementById('cmd-input'), list = document.getElementById('cmd-list'), btn = document.getElementById('cmd-palette-button');
             const commands = [
@@ -472,18 +378,13 @@
             input.addEventListener('input', () => renderCommands(input.value));
             modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
         }
-
         function initSKSChart() {
             const data = { labels: ['Programming and Algorithm (4)','Computer Architecture (3)','Intro to IT (3)','Computer Mathematics 1 (3)','Islamic Religion (3)','English (2)','Health and Safety (2)'], datasets: [{ label: 'SKS', data: [4, 3, 3, 3, 3, 2, 2], backgroundColor: ['#FF6B6B','#FFD166','#06D6A0','#118AB2','#073B4C','#EE9B00','#9B2226'], borderColor: document.documentElement.classList.contains('dark') ? '#1f2937' :'#FFFFFF', borderWidth: 3, hoverOffset: 15 }] };
             const config = { type: 'doughnut', data: data, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { font: { size: 12, weight: '600'}, padding: 15, usePointStyle: true, pointStyle: 'rectRounded' }}, tooltip: { enabled: true, backgroundColor: '#073B4C', titleFont: { size: 16, weight: 'bold' }, bodyFont: { size: 14 }, padding: 12, cornerRadius: 8, callbacks: { title: (ctx) => ctx[0].label } } } } };
             window.sksChart = new Chart(document.getElementById('sksChart'), config);
         }
         
-        function renderScheduleGrid() {
-            const gridEl = document.getElementById('schedule-grid'); gridEl.innerHTML = ''; const days = ['SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT', 'SABTU', 'MINGGU'];
-            const scheduleData = { SENIN: [ { time: '07.00 - 10.25', jam: '1-4', title: 'Programming and Algorithm', lecturer: 'Muhammad Jauharul Fuady', room: 'B11-414', color: 'border-red-500' }, { time: '10.30 - 12.10', jam: '5-6', title: 'English for Professional Purposes', lecturer: 'Muhammad Iqbal Akbar', room: 'A20-211', color: 'border-yellow-500' } ], SELASA: [ { time: '07.00 - 09.35', jam: '1-3', title: 'Organization and Computer Architecture', lecturer: 'Muhammad Ashar', room: 'B12-205', color: 'border-green-500' }, { time: '09.35 - 12.10', jam: '4-6', title: 'Introduction to Information Technology', lecturer: 'Heni Vidia Sari', room: 'A19-405', color: 'border-blue-500' } ], RABU: [ { time: '09.35 - 12.10', jam: '4-6', title: 'Computer Mathematics 1', lecturer: 'Muhammad Iqbal Akbar', room: 'A20-208', color: 'border-blue-500' }, { break: true, time: '12.10 - 14.55' }, { time: '14.55 - 16.35', jam: '9-10', title: 'Islamic Religion Education', lecturer: 'Muhammad Alfan', room: 'A19-710', color: 'border-indigo-500' } ], KAMIS: [], JUMAT: [{ time: '07.00 - 08.40', jam: '1-2', title: 'Occupational Health and Safety', lecturer: 'Muis Muhtadi', room: 'B12-113', color: 'border-pink-500' }], SABTU: [{ time: '07.00 - 10.25', jam: '1-4', title: 'Islamic Religion Education', lecturer: 'Muhammad Alfan', room: 'F2.1', color: 'border-indigo-500' }], MINGGU: [] };
-            days.forEach(day => { const dayClasses = scheduleData[day]; let content = ''; if(dayClasses.length === 0) { const icon = day === 'KAMIS' ? '😴' : '🎉'; content = `<div class="bg-gray-200 dark:bg-gray-800/50 border-t-4 border-gray-400 rounded-lg shadow-md p-6 flex flex-col items-center justify-center h-full mt-6 card-hover"><div class="text-6xl mb-4">${icon}</div><h4 class="font-bold text-2xl">${day === 'MINGGU' ? 'Akhir Pekan!' : 'Hari Kosong'}</h4></div>`; } else { dayClasses.forEach(c => { if (c.break) { content += `<div class="bg-green-100 dark:bg-green-900/50 p-4 rounded-lg shadow-md border-t-4 border-green-500 text-center card-hover"><p class="font-bold text-gray-500 dark:text-gray-400 text-sm">${c.time}</p><h4 class="font-bold text-lg text-green-800 dark:text-green-300">☕ JEDA PANJANG ☕</h4></div>`; } else { content += `<div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border-t-4 ${c.color} card-hover"><p class="font-bold text-gray-500 dark:text-gray-400 text-sm">${c.time}</p><p class="font-semibold text-gray-500 dark:text-gray-400 text-xs mt-1">🕒 Jam ke-${c.jam}</p><h4 class="font-bold text-lg mt-2">${c.title}</h4><p class="text-gray-600 dark:text-gray-300 text-sm">${c.lecturer}</p><p class="font-semibold mt-2 text-sm">📍 ${c.room}</p></div>`; } }); } gridEl.innerHTML += `<div class="flex flex-col space-y-6"><h3 class="text-2xl font-bold text-center ${dayClasses.length === 0 ? 'bg-gray-600' : 'bg-[#073B4C] dark:bg-gray-700'} text-white py-2 rounded-lg shadow-md">${day}</h3>${content}</div>`; });
-        }
     </script>
 </body>
 </html>
+
